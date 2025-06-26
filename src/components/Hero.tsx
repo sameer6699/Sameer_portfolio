@@ -8,7 +8,17 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
-  const roles = ['Full Stack Developer', 'UI/UX Designer', 'Problem Solver', 'Tech Enthusiast'];
+  const roles = [
+    'Full Stack Developer',
+    'Backend Developer',
+    'Frontend Developer',
+    'UI/UX Designer',
+    'Cloud Architect',
+    'DevOps Engineer',
+    'API Developer',
+    'Tech Enthusiast',
+    'Problem Solver',
+  ];
   const techSymbols = ['<>', '{}', '/>', '=>', '()', '[]', 'const', 'let', 'var', 'React', 'Node', 'SQL', 'py', 'git', 'λ', 'ƒ', 'Σ', '∫', '∞', 'Φ'];
 
   const scrollToPortfolio = () => {
