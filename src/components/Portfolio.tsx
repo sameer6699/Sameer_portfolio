@@ -240,7 +240,7 @@ export const Portfolio: React.FC = () => {
                     <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
                       {project.description.split('\n')[0]}
                     </p>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-4 pb-4 justify-center">
                       {project.tags.map((tag) => (
                         <span
                           key={tag}

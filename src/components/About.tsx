@@ -23,6 +23,33 @@ export const About: React.FC = () => {
     { name: 'Next.js', icon: '▲' },
     { name: 'Tailwind', icon: '🎨' },
     { name: 'Firebase', icon: '🔥' },
+    { name: 'Java', icon: '☕' },
+    { name: 'Python', icon: '🐍' },
+    { name: 'SQL', icon: '🗄️' },
+    { name: 'Shell Scripting', icon: '💻' },
+    { name: 'C++', icon: '➕' },
+    { name: 'HTML', icon: '🌐' },
+    { name: 'CSS', icon: '🎀' },
+    { name: 'JavaScript', icon: '✨' },
+    { name: 'jQuery', icon: '💠' },
+    { name: 'REST', icon: '🔗' },
+    { name: 'Spring Boot', icon: '🌱' },
+    { name: 'Django', icon: '🦎' },
+    { name: 'Git', icon: '🔧' },
+    { name: 'GitLab', icon: '🦊' },
+    { name: 'Docker', icon: '🐳' },
+    { name: 'Kubernetes', icon: '☸️' },
+    { name: 'CI/CD', icon: '🔄' },
+    { name: 'AWS', icon: '☁️' },
+    { name: 'Microsoft Azure', icon: '🔷' },
+    { name: 'MongoDB', icon: '🍃' },
+    { name: 'MySQL', icon: '🐬' },
+    { name: 'TensorFlow', icon: '🧠' },
+    { name: 'OpenCV', icon: '👁️' },
+    { name: 'PyTorch', icon: '🔥' },
+    { name: 'LangChain', icon: '🔗' },
+    { name: 'NLP', icon: '🗣️' },
+    { name: 'Postman', icon: '📮' },
   ];
 
   const facts = [
@@ -192,22 +219,54 @@ export const About: React.FC = () => {
             className="mt-16"
           >
             <h3 className="text-2xl font-bold text-center mb-8 text-gray-800 dark:text-white">
-              Tech Stack
+              Known Technologies & Tech Stack
             </h3>
-            <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
-              {techStack.map((tech, index) => (
-                <motion.div
-                  key={tech.name}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.5, delay: 1 + index * 0.1 }}
-                  whileHover={{ scale: 1.1, y: -5 }}
-                  className="px-6 py-3 bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-full border border-white/30 dark:border-gray-700/30 flex items-center gap-2"
+            <div>
+              <div
+                ref={scrollContainerRef}
+                className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar px-10 items-center"
+                style={{ scrollBehavior: 'smooth' }}
+              >
+                {techStack.map((tech, index) => (
+                  <motion.div
+                    key={tech.name}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ duration: 0.5, delay: 1 + index * 0.1 }}
+                    whileHover={{ scale: 1.1, y: -5 }}
+                    className="px-6 py-3 bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-full border border-white/30 dark:border-gray-700/30 flex items-center gap-2"
+                  >
+                    <span className="text-2xl">{tech.icon}</span>
+                    <span className="font-medium text-gray-800 dark:text-white">{tech.name}</span>
+                  </motion.div>
+                ))}
+              </div>
+              <div className="flex justify-center gap-4 mt-2">
+                <button
+                  onClick={() => {
+                    if (scrollContainerRef.current) {
+                      scrollContainerRef.current.scrollBy({ left: -150, behavior: 'smooth' });
+                    }
+                  }}
+                  className="w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full shadow p-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                  aria-label="Scroll left"
+                  type="button"
                 >
-                  <span className="text-2xl">{tech.icon}</span>
-                  <span className="font-medium text-gray-800 dark:text-white">{tech.name}</span>
-                </motion.div>
-              ))}
+                  {'<'}
+                </button>
+                <button
+                  onClick={() => {
+                    if (scrollContainerRef.current) {
+                      scrollContainerRef.current.scrollBy({ left: 150, behavior: 'smooth' });
+                    }
+                  }}
+                  className="w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full shadow p-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                  aria-label="Scroll right"
+                  type="button"
+                >
+                  {'>'}
+                </button>
+              </div>
             </div>
           </motion.div>
         </motion.div>
