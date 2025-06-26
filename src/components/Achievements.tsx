@@ -2,15 +2,27 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Trophy } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import HackerRankLogo from './assets/Hacker-rank-logo.png';
+import GoogleCloudLogo from './assets/google-cloud.png';
 
 export const Achievements: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
 
   const achievements = [
     {
-      icon: Trophy,
-      text: 'Google Summer of Code 2024',
-      description: 'Contributor at MetaCall',
+      icon: 'hackerRank',
+      text: 'Hacker Rank 3-Star Gold Badge in Problem Solving',
+      description: 'Ranked in the top 10% globally for proficiency in Data Structures, Algorithms, SQL, and Python, with 100+ problems solved.',
+    },
+    {
+      icon: 'googleCloud',
+      text: 'AI-driven Interview System (Google Gen AI Program)',
+      description: 'Developed an AI-driven interview system using Generative AI and large language models, leading to project selection in the prestigious Google Gen AI program, competing among 200+ innovative AI solutions globally.',
+    },
+    {
+      icon: 'hackerRank',
+      text: 'Hacker Rank Certified Software Engineer',
+      description: 'Validated expertise in software development, problem-solving, and algorithmic thinking, assessed through rigorous coding challenges.',
     },
   ];
 
@@ -24,8 +36,9 @@ export const Achievements: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto"
         >
-          <h2 className="text-4xl font-bold text-center mb-16 text-gray-800 dark:text-white">
+          <h2 className="text-4xl font-bold text-center mb-16 text-gray-800 dark:text-white flex items-center justify-center gap-3">
             Achievements
+            <Trophy className="w-8 h-8 text-yellow-500" />
           </h2>
 
           <div className="grid md:grid-cols-1 gap-8">
@@ -37,7 +50,12 @@ export const Achievements: React.FC = () => {
                 transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
                 className="flex items-center gap-6 p-6 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg"
               >
-                <achievement.icon className="w-10 h-10 text-yellow-500" />
+                {achievement.icon === 'hackerRank' && (
+                  <img src={HackerRankLogo} alt="HackerRank Logo" className="w-10 h-10 object-contain" />
+                )}
+                {achievement.icon === 'googleCloud' && (
+                  <img src={GoogleCloudLogo} alt="Google Cloud Logo" className="w-10 h-10 object-contain" />
+                )}
                 <div>
                   <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{achievement.text}</h3>
                   <p className="text-gray-600 dark:text-gray-400">{achievement.description}</p>
