@@ -1,7 +1,8 @@
-import React from 'react';
+import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Code, Palette, Coffee, Heart } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import aboutImage from './assets/image (2).png';
 
 export const About: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
@@ -45,7 +46,7 @@ export const About: React.FC = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-xl opacity-30"></div>
                 <img
-                  src="https://images.pexels.com/photos/3778603/pexels-photo-3778603.jpeg?auto=compress&cs=tinysrgb&w=600"
+                  src={aboutImage}
                   alt="About me"
                   className="relative rounded-2xl shadow-2xl w-full h-auto"
                 />
@@ -59,16 +60,12 @@ export const About: React.FC = () => {
               className="space-y-6"
             >
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                I'm a passionate full-stack developer with a keen eye for design and a love for
-                creating digital experiences that make a difference. My journey in tech started
-                3 years ago, and I've been obsessed with crafting pixel-perfect interfaces ever since.
+                Hello! I'm Sameer Prahsant Jadhav.
+                I love diving into technological things and solve the customers problems with modern technology and smart solution. I enjoy meeting new people and hearing new perspective.
               </p>
 
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                When I'm not coding, you'll find me exploring new technologies, contributing to
-                open-source projects, or enjoying a perfect cup of coffee while sketching out
-                my next big idea. I believe in the power of technology to solve real-world problems
-                and create meaningful connections.
+                My journey in tech is driven by a passion for creating impactful digital experiences. I specialize in full-stack development, always exploring new technologies, and contributing to open-source. I'm obsessed with crafting pixel-perfect interfaces that are both beautiful and user-friendly. Reach out if you want to talk to me about emerging tech, creating software products or Football.
               </p>
 
               <div className="grid grid-cols-2 gap-4 mt-8">
