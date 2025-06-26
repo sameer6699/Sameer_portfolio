@@ -9,6 +9,7 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { BookAppointment } from './components/BookAppointment';
 import { Navbar } from './components/Navbar';
+import { SocialHandles } from './components/SocialHandles';
 
 function App() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -24,6 +25,7 @@ function App() {
       <div id="portfolio"><Portfolio /></div>
       <div id="experience"><Experience /></div>
       <div id="achievements"><Achievements /></div>
+      <div id="social-handles"><SocialHandles /></div>
       <div id="contact"><Contact /></div>
       <Footer />
       
