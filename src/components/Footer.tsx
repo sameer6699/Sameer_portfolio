@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, ArrowUp, X } from 'lucide-react';
+import { Heart, ArrowUp, X, Send } from 'lucide-react';
 import RoboLogo from './assets/robo-logo.png';
+import MetaAvatar from './assets/meta-Avtar-profile.png';
 
 export const Footer: React.FC = () => {
   const scrollToTop = () => {
@@ -12,6 +13,24 @@ export const Footer: React.FC = () => {
   const [messages, setMessages] = React.useState([
     { sender: "sam", text: "Hi! I'm Sam AI. How can I help you today?" },
   ]);
+  const [isTyping, setIsTyping] = React.useState(false);
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (isChatOpen) {
+      const handleEsc = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') setIsChatOpen(false);
+      };
+      window.addEventListener('keydown', handleEsc);
+      return () => window.removeEventListener('keydown', handleEsc);
+    }
+  }, [isChatOpen]);
+
+  React.useEffect(() => {
+    if (isChatOpen && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isChatOpen]);
 
   const handleSend = () => {
     if (chatInput.trim() === "") return;
@@ -20,12 +39,14 @@ export const Footer: React.FC = () => {
       { sender: "user", text: chatInput },
     ]);
     setChatInput("");
+    setIsTyping(true);
     setTimeout(() => {
       setMessages((msgs) => [
         ...msgs,
         { sender: "sam", text: "I'm just a demo for now!" },
       ]);
-    }, 700);
+      setIsTyping(false);
+    }, 900);
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -102,35 +123,80 @@ export const Footer: React.FC = () => {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed top-0 right-0 h-screen w-full sm:w-1/2 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-50 shadow-2xl border-l border-white/20 dark:border-gray-700/20 flex flex-col"
+            className="fixed top-0 right-0 h-screen w-full sm:w-1/2 bg-gradient-to-br from-blue-50/80 via-white/90 to-cyan-100/80 dark:from-gray-900/90 dark:via-gray-900/95 dark:to-gray-800/90 backdrop-blur-md z-50 shadow-2xl border-l border-white/20 dark:border-gray-700/20 flex flex-col"
             style={{ maxWidth: '100vw' }}
+            aria-modal="true"
+            role="dialog"
           >
             <div className="flex items-center justify-between p-4 border-b border-gray-200/20 dark:border-gray-700/20">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                <img src={RoboLogo} alt="Robo Logo" className="w-7 h-7 inline-block" />
+                <span className="w-9 h-9 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow">
+                  <img src={MetaAvatar} alt="Meta Avatar" className="w-7 h-7 rounded-full object-cover" />
+                </span>
                 Chat with Sam AI
               </h2>
               <button
                 onClick={() => setIsChatOpen(false)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
                 aria-label="Close chat modal"
               >
                 <X className="w-6 h-6 text-gray-500" />
               </button>
             </div>
-            <div className="p-6 flex-1 flex flex-col overflow-hidden">
+            <div className="relative flex-1 flex flex-col overflow-hidden">
               {/* Chat messages area */}
-              <div className="flex-1 overflow-y-auto bg-white/60 dark:bg-gray-800/60 rounded-lg p-4 mb-4 border border-white/20 dark:border-gray-700/20" style={{ minHeight: 0 }}>
+              <div className="flex-1 overflow-y-auto bg-white/60 dark:bg-gray-800/60 rounded-lg p-4 mb-2 border border-white/20 dark:border-gray-700/20 custom-scrollbar" style={{ minHeight: 0 }}>
                 {messages.map((msg, idx) => (
-                  <div key={idx} className={`flex mb-2 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`px-4 py-2 rounded-2xl max-w-xs break-words text-sm shadow ${msg.sender === 'user' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'}`}>
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25, delay: idx * 0.04 }}
+                    className={`flex mb-2 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    {msg.sender === 'sam' && (
+                      <span className="w-7 h-7 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center mr-2 self-end shadow">
+                        <img src={MetaAvatar} alt="Sam AI" className="w-6 h-6 rounded-full object-cover" />
+                      </span>
+                    )}
+                    <div className={`relative px-4 py-2 rounded-2xl max-w-xs break-words text-sm shadow-lg ${msg.sender === 'user' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-br-none' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-none'}`}
+                      >
                       {msg.text}
+                      {/* Bubble tail */}
+                      <span className={`absolute bottom-0 ${msg.sender === 'user' ? 'right-0 translate-x-1/2' : 'left-0 -translate-x-1/2'} w-3 h-3 bg-inherit rounded-full z-0`}></span>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
+                {isTyping && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex mb-2 items-end gap-2"
+                  >
+                    <span className="w-7 h-7 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow">
+                      <img src={MetaAvatar} alt="Sam AI" className="w-6 h-6 rounded-full object-cover" />
+                    </span>
+                    <div className="px-4 py-2 rounded-2xl max-w-xs bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm flex items-center gap-1 animate-pulse">
+                      <span className="inline-block w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
+                      <span className="inline-block w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-75"></span>
+                      <span className="inline-block w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></span>
+                    </div>
+                  </motion.div>
+                )}
+                <div ref={messagesEndRef} />
               </div>
+              {/* Scroll to bottom button */}
+              <button
+                onClick={() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                className="absolute right-4 bottom-20 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full p-2 shadow-lg hover:scale-110 transition-all focus:outline-none focus:ring-2 focus:ring-blue-400"
+                aria-label="Scroll to latest message"
+                style={{ display: messages.length > 3 ? 'block' : 'none' }}
+              >
+                <ArrowUp className="w-5 h-5 rotate-180" />
+              </button>
               {/* Chat input area */}
-              <div className="flex items-center gap-2 mt-auto">
+              <div className="flex items-center gap-2 p-2 bg-white/80 dark:bg-gray-900/80 border-t border-gray-200/30 dark:border-gray-700/30 sticky bottom-0 z-10">
                 <input
                   type="text"
                   className="flex-1 px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -139,13 +205,14 @@ export const Footer: React.FC = () => {
                   onChange={e => setChatInput(e.target.value)}
                   onKeyDown={handleInputKeyDown}
                   autoFocus
+                  aria-label="Type your message"
                 />
                 <button
                   onClick={handleSend}
-                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-full font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all duration-200"
+                  className="px-3 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-full font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all duration-200 flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   aria-label="Send message"
                 >
-                  Send
+                  <Send className="w-5 h-5" />
                 </button>
               </div>
             </div>

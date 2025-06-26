@@ -1,7 +1,8 @@
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { ChevronDown, Calendar } from 'lucide-react';
 import { AnimatedText } from './AnimatedText';
 import profileImage from './assets/image (2).png';
+import { useRef, useState, useEffect } from 'react';
 
 interface HeroProps {
   onBookAppointment: () => void;
@@ -20,45 +21,127 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
     'Problem Solver',
   ];
   const techSymbols = ['<>', '{}', '/>', '=>', '()', '[]', 'const', 'let', 'var', 'React', 'Node', 'SQL', 'py', 'git', 'λ', 'ƒ', 'Σ', '∫', '∞', 'Φ'];
+  const [cursor, setCursor] = useState<{ x: number | null; y: number | null } | null>(null);
+  const [shiftActivated, setShiftActivated] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
+  // Listen for Shift key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        setShiftActivated(true);
+      }
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        setShiftActivated(false);
+        setCursor({ x: null, y: null });
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  // Store random base positions for each symbol so they don't change on every render
+  const symbolBases = useRef(
+    Array.from({ length: 140 }, () => ({
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      fontSize: Math.random() * 1.5 + 0.75,
+      xMovement: (Math.random() - 0.5) * 200,
+      yMovement: (Math.random() - 0.5) * 200,
+      duration: Math.random() * 20 + 15,
+      delay: Math.random() * 10,
+      rotate: Math.random() * 180 - 90,
+    }))
+  );
 
   return (
-    <section className="min-h-screen relative flex items-center justify-center overflow-hidden bg-white dark:bg-gray-950">
+    <section
+      ref={sectionRef}
+      className="min-h-screen relative flex items-center justify-center overflow-hidden bg-white dark:bg-gray-950"
+      onMouseMove={e => {
+        if (!shiftActivated) return;
+        if (sectionRef.current) {
+          const rect = sectionRef.current.getBoundingClientRect();
+          setCursor({
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top,
+          });
+        }
+      }}
+      onMouseLeave={() => setCursor({ x: null, y: null })}
+      style={{ cursor: shiftActivated ? 'pointer' : 'default' }}
+    >
       {/* Tech-themed Animated Background */}
-      <div className="absolute inset-0 -z-0 overflow-hidden">
-        {[...Array(70)].map((_, i) => {
-            const symbol = techSymbols[i % techSymbols.length];
-            const style = {
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                fontSize: `${Math.random() * 1.5 + 0.75}rem`,
-            };
-            const duration = Math.random() * 20 + 15;
-            const delay = Math.random() * 10;
-            const xMovement = (Math.random() - 0.5) * 200;
-            const yMovement = (Math.random() - 0.5) * 200;
+      <div className="absolute inset-0 -z-0 overflow-hidden pointer-events-none">
+        {symbolBases.current.map((base, i) => {
+          const symbol = techSymbols[i % techSymbols.length];
+          // Calculate the symbol's base position in px
+          let cursorOffset = { x: 0, y: 0 };
+          let rect = { width: 0, height: 0 };
+          if (sectionRef.current) {
+            rect = sectionRef.current.getBoundingClientRect();
+          }
+          const symbolX = (base.left / 100) * rect.width;
+          const symbolY = (base.top / 100) * rect.height;
+          if (
+            shiftActivated &&
+            cursor &&
+            rect.width &&
+            rect.height &&
+            cursor.x !== null &&
+            cursor.y !== null
+          ) {
+            const dx = cursor.x - symbolX;
+            const dy = cursor.y - symbolY;
+            // Move 20% toward the cursor for a more visible effect
+            cursorOffset = { x: dx * 0.2, y: dy * 0.2 };
+          }
 
-            return (
-                <motion.div
-                    key={i}
-                    className="absolute font-mono text-purple-400/40 dark:text-green-400/25 select-none"
-                    style={style}
-                    animate={{
-                        x: [0, xMovement, 0],
-                        y: [0, yMovement, 0],
-                        rotate: [0, Math.random() * 180 - 90, 0]
-                    }}
-                    transition={{
-                        duration,
-                        delay,
-                        repeat: Infinity,
-                        repeatType: 'mirror',
-                        ease: 'easeInOut',
-                    }}
-                >
-                    {symbol}
-                </motion.div>
-            );
+          // Use Framer Motion's useMotionValue and useSpring for smooth animation
+          const x = useMotionValue(0);
+          const y = useMotionValue(0);
+          const springX = useSpring(x, { stiffness: 80, damping: 18 });
+          const springY = useSpring(y, { stiffness: 80, damping: 18 });
+
+          // Z axis simulation: animate scale between 0.8 and 1.2
+          const scale = useSpring(1 + Math.sin(base.delay) * 0.2, { stiffness: 60, damping: 16 });
+
+          // Update the motion values when cursorOffset changes
+          x.set(cursorOffset.x);
+          y.set(cursorOffset.y);
+
+          return (
+            <motion.div
+              key={i}
+              className="absolute font-mono text-purple-400/40 dark:text-green-400/25 select-none"
+              style={{
+                top: `${base.top}%`,
+                left: `${base.left}%`,
+                fontSize: `${base.fontSize}rem`,
+                x: springX,
+                y: springY,
+                scale: scale,
+              }}
+              animate={{
+                scale: [0.8, 1.2, 0.8],
+              }}
+              transition={{
+                duration: base.duration,
+                delay: base.delay,
+                repeat: Infinity,
+                repeatType: 'mirror',
+                ease: 'easeInOut',
+              }}
+            >
+              {symbol}
+            </motion.div>
+          );
         })}
       </div>
 
