@@ -15,41 +15,7 @@ import dockerLogo from './assets/docker-logo.png';
 import awsLogo from './assets/AWS-logo.png';
 import gitLogo from './assets/git-logo.png';
 import { useState, useEffect, useRef } from 'react';
-import { useMotionValue, useAnimationFrame } from 'framer-motion';
-
-// Helper for circular progress SVG
-const CircularProgress = ({ value, color }: { value: number; color: string }) => {
-  const radius = 22;
-  const stroke = 4;
-  const normalizedRadius = radius - stroke * 2;
-  const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (value / 100) * circumference;
-  return (
-    <svg height={radius * 2} width={radius * 2} className="block">
-      <circle
-        stroke="#e5e7eb"
-        fill="transparent"
-        strokeWidth={stroke}
-        r={normalizedRadius}
-        cx={radius}
-        cy={radius}
-      />
-      <motion.circle
-        stroke={color}
-        fill="transparent"
-        strokeWidth={stroke}
-        strokeLinecap="round"
-        r={normalizedRadius}
-        cx={radius}
-        cy={radius}
-        strokeDasharray={circumference}
-        strokeDashoffset={circumference}
-        animate={{ strokeDashoffset }}
-        transition={{ duration: 1.2, ease: 'easeOut' }}
-      />
-    </svg>
-  );
-};
+import { useMotionValue } from 'framer-motion';
 
 const skillIcons: Record<string, string> = {
   'React.js': reactLogo,
@@ -113,11 +79,9 @@ export const Skills: React.FC = () => {
                 (categorySkills.length || 1);
               // Animated count-up for percentage
               const percentMotion = useMotionValue(0);
-              const percentRef = useRef<HTMLSpanElement>(null);
               useEffect(() => {
                 if (hoveredSkill === key) {
                   percentMotion.set(0);
-                  let start = 0;
                   const end = Math.round(avgProficiency);
                   const duration = 800;
                   const startTime = performance.now();
