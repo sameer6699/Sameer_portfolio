@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ChevronDown, Download, Calendar } from 'lucide-react';
+import { ChevronDown, Calendar } from 'lucide-react';
 import { AnimatedText } from './AnimatedText';
 import profileImage from './assets/image (2).png';
 
@@ -21,9 +21,6 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
   ];
   const techSymbols = ['<>', '{}', '/>', '=>', '()', '[]', 'const', 'let', 'var', 'React', 'Node', 'SQL', 'py', 'git', 'λ', 'ƒ', 'Σ', '∫', '∞', 'Φ'];
 
-  const scrollToPortfolio = () => {
-    document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   return (
     <section className="min-h-screen relative flex items-center justify-center overflow-hidden bg-white dark:bg-gray-950">

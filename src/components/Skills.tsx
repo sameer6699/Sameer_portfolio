@@ -14,7 +14,7 @@ import adobeXDLogo from './assets/AdobeXD-logo.png';
 import dockerLogo from './assets/docker-logo.png';
 import awsLogo from './assets/AWS-logo.png';
 import gitLogo from './assets/git-logo.png';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect} from 'react';
 import { useMotionValue } from 'framer-motion';
 
 const skillIcons: Record<string, string> = {
@@ -35,6 +35,29 @@ const skillIcons: Record<string, string> = {
 export const Skills: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const [visitorCount, setVisitorCount] = useState<number>(0);
+
+  useEffect(() => {
+    const countKey = 'portfolioVisitorCount';
+    let count = localStorage.getItem(countKey);
+
+    // Initialize count to 20 if it's not set
+    if (count === null) {
+      count = '20';
+    }
+
+    let numericCount = Number(count);
+    const visitedKey = 'hasVisitedPortfolio';
+
+    // If the user hasn't visited before, increment the count
+    if (!localStorage.getItem(visitedKey)) {
+      numericCount += 1;
+      localStorage.setItem(visitedKey, 'true');
+    }
+    
+    localStorage.setItem(countKey, numericCount.toString());
+    setVisitorCount(numericCount);
+  }, []);
 
   const skills: Skill[] = [
     { name: 'React.js', level: 95, category: 'frontend' },
@@ -169,22 +192,18 @@ export const Skills: React.FC = () => {
             transition={{ duration: 0.8, delay: 1 }}
             className="mt-16 text-center"
           >
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-2">3+</div>
-                <div className="text-gray-600 dark:text-gray-400">Years Experience</div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 text-center shadow-lg border border-white/30 dark:border-gray-700/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
+                <div className="text-4xl font-bold text-purple-600 mb-2">{visitorCount}</div>
+                <div className="text-gray-600 dark:text-gray-400">Visitors Count</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">50+</div>
-                <div className="text-gray-600 dark:text-gray-400">Projects Completed</div>
+              <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 text-center shadow-lg border border-white/30 dark:border-gray-700/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
+                <div className="text-4xl font-bold text-blue-600 mb-2">2</div>
+                <div className="text-gray-600 dark:text-gray-400">Booked Enquiry</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-green-600 mb-2">25+</div>
-                <div className="text-gray-600 dark:text-gray-400">Happy Clients</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-pink-600 mb-2">100%</div>
-                <div className="text-gray-600 dark:text-gray-400">Satisfaction Rate</div>
+              <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 text-center shadow-lg border border-white/30 dark:border-gray-700/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
+                <div className="text-4xl font-bold text-green-600 mb-2">5</div>
+                <div className="text-gray-600 dark:text-gray-400">User Get in Touch</div>
               </div>
             </div>
           </motion.div>

@@ -9,6 +9,10 @@ export const About: React.FC = () => {
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = React.useState(0);
   const isThrottled = React.useRef(false);
+  const autoScrollTimeout = React.useRef<number | null>(null);
+  const pauseTimeout = React.useRef<number | null>(null);
+  const AUTO_SCROLL_INTERVAL = 2500; // ms
+  const PAUSE_AFTER_INTERACTION = 5000; // ms
 
   const techStack = [
     { name: 'React', icon: '⚛️' },
@@ -54,18 +58,53 @@ export const About: React.FC = () => {
     }, 100);
   };
 
+  // --- Auto-scroll logic ---
+  React.useEffect(() => {
+    if (!isInView) return;
+    // Clear any previous timeouts
+    if (autoScrollTimeout.current) clearTimeout(autoScrollTimeout.current);
+    if (pauseTimeout.current) clearTimeout(pauseTimeout.current);
+
+    const startAutoScroll = () => {
+      autoScrollTimeout.current = setTimeout(() => {
+        setActiveIndex((prev) => (prev + 1) % facts.length);
+      }, AUTO_SCROLL_INTERVAL);
+    };
+    startAutoScroll();
+    return () => {
+      if (autoScrollTimeout.current) clearTimeout(autoScrollTimeout.current);
+      if (pauseTimeout.current) clearTimeout(pauseTimeout.current);
+    };
+  }, [activeIndex, isInView]);
+
+  // Pause auto-scroll on user interaction
+  const pauseAutoScroll = () => {
+    if (autoScrollTimeout.current) clearTimeout(autoScrollTimeout.current);
+    if (pauseTimeout.current) clearTimeout(pauseTimeout.current);
+    pauseTimeout.current = setTimeout(() => {
+      setActiveIndex((prev) => prev); // trigger effect to resume auto-scroll
+    }, PAUSE_AFTER_INTERACTION);
+  };
+
   const scrollToIndex = (index: number) => {
-    setActiveIndex(index);
+    // Clamp index to valid range
+    const clampedIndex = Math.max(0, Math.min(index, facts.length - 1));
     if (scrollContainerRef.current) {
-      const item = scrollContainerRef.current.children[index] as HTMLElement;
+      const item = scrollContainerRef.current.children[clampedIndex] as HTMLElement;
       if (item) {
         item.scrollIntoView({
           behavior: 'smooth',
           block: 'nearest',
           inline: 'center',
         });
+        setTimeout(() => setActiveIndex(clampedIndex), 350);
+      } else {
+        setActiveIndex(clampedIndex);
       }
+    } else {
+      setActiveIndex(clampedIndex);
     }
+    pauseAutoScroll();
   };
 
   return (
@@ -113,39 +152,21 @@ export const About: React.FC = () => {
                 My journey in tech is driven by a passion for creating impactful digital experiences. I specialize in full-stack development, always exploring new technologies, and contributing to open-source. I'm obsessed with crafting pixel-perfect interfaces that are both beautiful and user-friendly. Reach out if you want to talk to me about emerging tech, creating software products or Football.
               </p>
 
-              <div>
-                <div
-                  ref={scrollContainerRef}
-                  onScroll={handleScroll}
-                  className="flex overflow-x-auto gap-4 mt-8 pb-4 hide-scrollbar"
-                >
-                  {facts.map((fact, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={isInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
-                      whileHover={{ scale: 1.05, y: -5 }}
-                      className="flex-shrink-0 flex items-center gap-3 p-3 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm cursor-pointer hover:bg-white/70 dark:hover:bg-gray-800/70"
-                    >
-                      <fact.icon className="w-5 h-5 text-purple-600" />
-                      <span className="text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{fact.text}</span>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Dots */}
-                <div className="flex justify-center gap-2 mt-4">
-                  {facts.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => scrollToIndex(index)}
-                      className={`w-2 h-2 rounded-full transition-colors ${
-                        activeIndex === index ? 'bg-purple-600' : 'bg-gray-400 dark:bg-gray-600'
-                      }`}
-                      aria-label={`Go to item ${index + 1}`}
-                    />
-                  ))}
+              <div className="flex items-center gap-2 mt-8">
+                {/* Single Fact Carousel Animation */}
+                <div className="flex justify-center w-full">
+                  <motion.div
+                    key={activeIndex}
+                    initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -30, scale: 0.9 }}
+                    transition={{ duration: 0.5 }}
+                    className="flex items-center gap-3 p-5 rounded-xl bg-white/70 dark:bg-gray-800/70 backdrop-blur-md shadow-xl ring-4 ring-purple-400/70"
+                    style={{ minWidth: 260, maxWidth: 320 }}
+                  >
+                    {React.createElement(facts[activeIndex].icon, { className: 'w-7 h-7 text-purple-600' })}
+                    <span className="text-lg font-bold text-gray-700 dark:text-gray-200 whitespace-nowrap">{facts[activeIndex].text}</span>
+                  </motion.div>
                 </div>
               </div>
             </motion.div>
