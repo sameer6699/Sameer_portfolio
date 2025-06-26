@@ -4,6 +4,9 @@ import { Mail, Phone, MapPin, Send, Github, Linkedin, CheckCircle, Copy } from '
 import { useForm } from 'react-hook-form';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import twitterLogo from './assets/twitter-logo.png';
+import GetInTouchLogo from './assets/get-in-touch.png';
+import EmailLogo from './assets/email-logo.png';
+import LocationLogo from './assets/location-logo.png';
 
 interface ContactForm {
   name: string;
@@ -58,7 +61,7 @@ export const Contact: React.FC = () => {
         >
           <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-6 text-gray-800 dark:text-white tracking-tight drop-shadow-lg flex items-center justify-center gap-3">
             Get In Touch
-            <Send className="w-12 h-12 text-purple-600" />
+            <img src={GetInTouchLogo} alt="Get In Touch Logo" className="w-12 h-12 object-contain" />
           </h2>
           <p className="text-center text-lg text-gray-600 dark:text-gray-300 mb-16 max-w-2xl mx-auto">
             Have a project in mind? Let's discuss how we can work together to bring your ideas to life.
@@ -90,9 +93,13 @@ export const Contact: React.FC = () => {
                     transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
                     className="flex items-center gap-4 p-4 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-xl border border-white/30 dark:border-gray-700/30 shadow-md hover:shadow-lg transition-all group relative"
                   >
-                    <div className="p-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg text-white group-hover:scale-110 transition-transform">
-                      <info.icon className="w-5 h-5" />
-                    </div>
+                    {info.label === 'Email' ? (
+                      <img src={EmailLogo} alt="Email Logo" className="w-7 h-7 object-contain" />
+                    ) : info.label === 'Location' ? (
+                      <img src={LocationLogo} alt="Location Logo" className="w-6 h-6 object-contain" />
+                    ) : (
+                      <img src={GetInTouchLogo} alt="Get In Touch Logo" className="w-5 h-5 object-contain" />
+                    )}
                     <a
                       href={info.href}
                       target={info.label === 'Location' ? '_blank' : undefined}

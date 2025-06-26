@@ -4,6 +4,7 @@ import { Trophy } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import HackerRankLogo from './assets/Hacker-rank-logo.png';
 import GoogleCloudLogo from './assets/google-cloud.png';
+import AchievementLogo from './assets/achivement-logo.png';
 
 export const Achievements: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
@@ -38,7 +39,7 @@ export const Achievements: React.FC = () => {
         >
           <h2 className="text-4xl font-bold text-center mb-16 text-gray-800 dark:text-white flex items-center justify-center gap-3">
             Achievements
-            <Trophy className="w-12 h-12 text-purple-600" />
+            <img src={AchievementLogo} alt="Achievement Logo" className="w-12 h-12 object-contain" />
           </h2>
 
           <div className="grid md:grid-cols-1 gap-8">

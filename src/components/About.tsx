@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Code, Palette, Heart, Smartphone, BrainCircuit } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import aboutImage from './assets/image (2).png';
+import metaAvtarProfile from './assets/meta-Avtar-profile.png';
 
 export const About: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
@@ -13,6 +14,7 @@ export const About: React.FC = () => {
   const pauseTimeout = React.useRef<number | null>(null);
   const AUTO_SCROLL_INTERVAL = 2500; // ms
   const PAUSE_AFTER_INTERACTION = 5000; // ms
+  const [showAIAvatar, setShowAIAvatar] = React.useState(false);
 
   const techStack = [
     { name: 'React', icon: '⚛️' },
@@ -127,13 +129,23 @@ export const About: React.FC = () => {
               animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-xl opacity-30"></div>
-                <img
-                  src={aboutImage}
-                  alt="About me"
-                  className="relative rounded-2xl shadow-2xl w-full h-auto"
-                />
+              <div className="relative flex flex-col gap-6 items-center justify-center">
+                <div className="relative w-full">
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-xl opacity-30"></div>
+                  <img
+                    src={showAIAvatar ? metaAvtarProfile : aboutImage}
+                    alt={showAIAvatar ? 'Meta Avatar Profile' : 'About me'}
+                    className="relative rounded-2xl shadow-2xl w-full h-auto"
+                  />
+                </div>
+                <div className="mt-4 flex justify-center w-full">
+                  <button
+                    onClick={() => setShowAIAvatar((prev) => !prev)}
+                    className="px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold shadow hover:from-pink-600 hover:to-purple-600 transition-all duration-300"
+                  >
+                    {showAIAvatar ? 'Show Original' : 'Show AI Avatar'}
+                  </button>
+                </div>
               </div>
             </motion.div>
 
