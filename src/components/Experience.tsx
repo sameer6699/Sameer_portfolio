@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin } from 'lucide-react';
+import { Calendar, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { Experience as ExperienceType } from '../types';
 
 export const Experience: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const experiences: ExperienceType[] = [
     {
@@ -65,77 +66,94 @@ export const Experience: React.FC = () => {
     },
   ];
 
-  const renderTimeline = (items: ExperienceType[], title: string) => (
-    <div className="mb-12">
+  // Helper to get company initials
+  const getInitials = (name: string) => name.split(' ').map(w => w[0]).join('').toUpperCase();
+
+  // Scroll carousel
+  const scroll = (dir: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const width = scrollRef.current.offsetWidth;
+      scrollRef.current.scrollBy({ left: dir === 'left' ? -width : width, behavior: 'smooth' });
+    }
+  };
+
+  const renderCarousel = (items: ExperienceType[], title: string) => (
+    <div className="mb-16">
       <h3 className="text-2xl font-bold mb-8 text-gray-800 dark:text-white text-center">
         {title}
       </h3>
       <div className="relative">
-        {/* Timeline Line */}
-        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-600 to-pink-600"></div>
-        
-        {items.map((item, index) => (
-          <motion.div
-            key={item.id}
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: index * 0.2 }}
-            className="relative pl-20 pb-12 last:pb-0"
-          >
-            {/* Timeline Dot */}
+        {/* Navigation Arrows */}
+        <button
+          className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/70 dark:bg-gray-900/70 rounded-full shadow hover:scale-110 transition-all border border-gray-200 dark:border-gray-700"
+          onClick={() => scroll('left')}
+          aria-label="Scroll left"
+        >
+          <ChevronLeft className="w-6 h-6 text-purple-600" />
+        </button>
+        <button
+          className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/70 dark:bg-gray-900/70 rounded-full shadow hover:scale-110 transition-all border border-gray-200 dark:border-gray-700"
+          onClick={() => scroll('right')}
+          aria-label="Scroll right"
+        >
+          <ChevronRight className="w-6 h-6 text-purple-600" />
+        </button>
+        <div
+          ref={scrollRef}
+          className="flex gap-8 overflow-x-auto pb-4 hide-scrollbar snap-x snap-mandatory"
+        >
+          {items.map((item, index) => (
             <motion.div
-              initial={{ scale: 0 }}
-              animate={isInView ? { scale: 1 } : {}}
-              transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
-              className="absolute left-6 w-4 h-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full border-4 border-white dark:border-gray-900"
-            />
-            
-            {/* Content Card */}
-            <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 dark:border-gray-700/20 shadow-lg hover:shadow-xl transition-all duration-300">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-                <div>
-                  <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-1">
-                    {item.title}
-                  </h4>
-                  <p className="text-lg text-purple-600 dark:text-purple-400 font-medium">
-                    {item.company}
-                  </p>
-                </div>
-                <div className="flex flex-col sm:items-end mt-2 sm:mt-0">
-                  <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm mb-1">
-                    <Calendar className="w-4 h-4" />
-                    {item.duration}
-                  </div>
-                  <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm">
-                    <MapPin className="w-4 h-4" />
-                    {item.location}
-                  </div>
-                </div>
+              key={item.id}
+              initial={{ opacity: 0, y: 40 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: index * 0.15 }}
+              whileHover={{ scale: 1.04, y: -4 }}
+              className="min-w-[320px] max-w-xs w-full snap-center bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl rounded-3xl p-8 border border-white/30 dark:border-gray-700/30 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col gap-4 relative"
+            >
+              {/* Avatar */}
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl font-bold shadow-lg mb-2">
+                {getInitials(item.company)}
               </div>
-              
-              <ul className="space-y-2">
-                {item.description.map((desc, descIndex) => (
-                  <motion.li
-                    key={descIndex}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.5, delay: index * 0.2 + 0.5 + descIndex * 0.1 }}
-                    className="flex items-start gap-3 text-gray-600 dark:text-gray-300"
-                  >
-                    <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0" />
-                    {desc}
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-        ))}
+              <div>
+                <h4 className="text-lg font-bold text-gray-800 dark:text-white mb-1">
+                  {item.title}
+                </h4>
+                <p className="text-md text-purple-600 dark:text-purple-400 font-medium mb-2">
+                  {item.company}
+                </p>
+                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm mb-1">
+                  <Calendar className="w-4 h-4" />
+                  {item.duration}
+                </div>
+                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm mb-2">
+                  <MapPin className="w-4 h-4" />
+                  {item.location}
+                </div>
+                <ul className="space-y-2 mt-2">
+                  {item.description.map((desc, descIndex) => (
+                    <motion.li
+                      key={descIndex}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={isInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ duration: 0.5, delay: 0.3 + descIndex * 0.1 }}
+                      className="flex items-start gap-3 text-gray-600 dark:text-gray-300"
+                    >
+                      <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0" />
+                      {desc}
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );
 
   return (
-    <section id="experience" className="py-20 bg-gray-50/50 dark:bg-gray-800/50">
+    <section id="experience" className="py-20 bg-gradient-to-br from-gray-50/80 to-white/60 dark:from-gray-900/80 dark:to-gray-800/60">
       <div className="container mx-auto px-6">
         <motion.div
           ref={ref}
@@ -146,10 +164,9 @@ export const Experience: React.FC = () => {
           <h2 className="text-4xl font-bold text-center mb-16 text-gray-800 dark:text-white">
             Experience & Education
           </h2>
-
-          <div className="max-w-4xl mx-auto">
-            {renderTimeline(experiences, 'Professional Experience')}
-            {renderTimeline(education, 'Education')}
+          <div className="max-w-6xl mx-auto">
+            {renderCarousel(experiences, 'Professional Experience')}
+            {renderCarousel(education, 'Education')}
           </div>
         </motion.div>
       </div>
