@@ -120,15 +120,14 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <motion.button
-            onClick={scrollToPortfolio}
-            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 flex items-center gap-2"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <a
+            href="https://drive.google.com/file/d/1fRe0FdKTyckv_DQ-ebjxi-sBTXhMSaH4/view?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold flex items-center gap-2 text-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300"
           >
-            <Download className="w-5 h-5" />
-            View My Work
-          </motion.button>
+            Resume
+          </a>
 
           <motion.button
             onClick={onBookAppointment}
