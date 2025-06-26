@@ -4,6 +4,7 @@ import { ExternalLink, Github, ChevronLeft, ChevronRight, Laptop } from 'lucide-
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { Project } from '../types';
 import GSOC2024Img from './assets/GSOC-2024.png';
+import ComputerLogo from './assets/computer-logo.png';
 
 export const Portfolio: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
@@ -186,7 +187,7 @@ export const Portfolio: React.FC = () => {
           </div>
           <h2 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white flex items-center justify-center gap-3">
             My Portfolio
-            <Laptop className="w-12 h-12 text-purple-600" />
+            <img src={ComputerLogo} alt="Computer Logo" className="w-12 h-12 inline-block align-middle" />
           </h2>
           <p className="text-center text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
             Here are some of my recent projects that showcase my skills in web development, 

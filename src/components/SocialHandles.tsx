@@ -6,6 +6,7 @@ import GitHubLogo from './assets/github-logo.png';
 import RedditLogo from './assets/redit-logo.png';
 import LeetCodeLogo from './assets/leetcode-logo.png';
 import HackerEarthLogo from './assets/hackerearth-logo.png';
+import SocialIcon from './assets/Social-icon.png';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 // Import more logos as available, use placeholders for missing ones
 
@@ -64,7 +65,8 @@ export const SocialHandles: React.FC = () => {
     <section id="social-handles" className="bg-white/50 dark:bg-gray-900/50 min-h-screen flex items-center justify-center">
       <div className="container mx-auto px-6">
         <div className="w-full flex flex-col items-center justify-center">
-          <h2 className="text-4xl font-bold text-center mb-10 text-gray-800 dark:text-white">
+          <h2 className="text-4xl font-bold text-center mb-10 text-gray-800 dark:text-white flex items-center justify-center gap-3">
+            <img src={SocialIcon} alt="Social Icon" className="w-10 h-10 mr-2 inline-block align-middle" />
             Social Handles
           </h2>
           <div className="relative flex items-center w-full">

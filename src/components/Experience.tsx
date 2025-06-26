@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Calendar, MapPin, GraduationCap, ChevronDown, ChevronUp } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { Experience as ExperienceType } from '../types';
+import GraduationLogo from './assets/graduation-logo.png';
 
 export const Experience: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
@@ -209,7 +210,7 @@ export const Experience: React.FC = () => {
         >
           <h2 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white flex items-center justify-center gap-3">
             Experience & Education
-            <GraduationCap className="w-12 h-12 text-purple-600" />
+            <img src={GraduationLogo} alt="Graduation Logo" className="w-12 h-12 inline-block align-middle" />
           </h2>
 
           {/* Toggle Button Group */}
