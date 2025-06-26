@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { Code, Palette, Coffee, Heart } from 'lucide-react';
+import { Code, Palette, Heart, Smartphone, BrainCircuit } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import aboutImage from './assets/image (2).png';
 
 export const About: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const isThrottled = React.useRef(false);
 
   const techStack = [
     { name: 'React', icon: '⚛️' },
@@ -17,11 +20,53 @@ export const About: React.FC = () => {
   ];
 
   const facts = [
-    { icon: Coffee, text: 'Coffee enthusiast ☕ (5+ cups daily)' },
-    { icon: Code, text: '3+ years of coding experience' },
+    { icon: Code, text: 'Full Stack Developer' },
+    { icon: Smartphone, text: 'Mobile App Developer' },
+    { icon: BrainCircuit, text: 'AI/ML Enthusiast' },
     { icon: Palette, text: 'Pixel-perfect design obsessed' },
     { icon: Heart, text: 'Open source contributor' },
   ];
+
+  const handleScroll = () => {
+    if (isThrottled.current) return;
+    isThrottled.current = true;
+    setTimeout(() => {
+      isThrottled.current = false;
+      if (scrollContainerRef.current) {
+        const { scrollLeft, children, clientWidth } = scrollContainerRef.current;
+        const containerCenter = scrollLeft + clientWidth / 2;
+        
+        let closestIndex = 0;
+        let minDistance = Infinity;
+
+        Array.from(children).forEach((child, index) => {
+          const item = child as HTMLElement;
+          const itemCenter = item.offsetLeft + item.clientWidth / 2;
+          const distance = Math.abs(itemCenter - containerCenter);
+
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestIndex = index;
+          }
+        });
+        setActiveIndex(closestIndex);
+      }
+    }, 100);
+  };
+
+  const scrollToIndex = (index: number) => {
+    setActiveIndex(index);
+    if (scrollContainerRef.current) {
+      const item = scrollContainerRef.current.children[index] as HTMLElement;
+      if (item) {
+        item.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center',
+        });
+      }
+    }
+  };
 
   return (
     <section id="about" className="py-20 bg-white/50 dark:bg-gray-900/50">
@@ -68,19 +113,40 @@ export const About: React.FC = () => {
                 My journey in tech is driven by a passion for creating impactful digital experiences. I specialize in full-stack development, always exploring new technologies, and contributing to open-source. I'm obsessed with crafting pixel-perfect interfaces that are both beautiful and user-friendly. Reach out if you want to talk to me about emerging tech, creating software products or Football.
               </p>
 
-              <div className="grid grid-cols-2 gap-4 mt-8">
-                {facts.map((fact, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-                  >
-                    <fact.icon className="w-5 h-5 text-purple-600" />
-                    <span className="text-sm text-gray-600 dark:text-gray-300">{fact.text}</span>
-                  </motion.div>
-                ))}
+              <div>
+                <div
+                  ref={scrollContainerRef}
+                  onScroll={handleScroll}
+                  className="flex overflow-x-auto gap-4 mt-8 pb-4 hide-scrollbar"
+                >
+                  {facts.map((fact, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
+                      whileHover={{ scale: 1.05, y: -5 }}
+                      className="flex-shrink-0 flex items-center gap-3 p-3 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm cursor-pointer hover:bg-white/70 dark:hover:bg-gray-800/70"
+                    >
+                      <fact.icon className="w-5 h-5 text-purple-600" />
+                      <span className="text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{fact.text}</span>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Dots */}
+                <div className="flex justify-center gap-2 mt-4">
+                  {facts.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => scrollToIndex(index)}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        activeIndex === index ? 'bg-purple-600' : 'bg-gray-400 dark:bg-gray-600'
+                      }`}
+                      aria-label={`Go to item ${index + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
             </motion.div>
           </div>
@@ -95,7 +161,7 @@ export const About: React.FC = () => {
             <h3 className="text-2xl font-bold text-center mb-8 text-gray-800 dark:text-white">
               Tech Stack
             </h3>
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
               {techStack.map((tech, index) => (
                 <motion.div
                   key={tech.name}
