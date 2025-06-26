@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Heart, ArrowUp } from 'lucide-react';
-import { Counter } from './Counter';
 
 export const Footer: React.FC = () => {
   const scrollToTop = () => {
