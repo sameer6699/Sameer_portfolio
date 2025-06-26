@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Heart, ArrowUp, X, Send } from 'lucide-react';
-import RoboLogo from './assets/robo-logo.png';
 import MetaAvatar from './assets/meta-Avtar-profile.png';
 import { Counter } from './Counter';
 
