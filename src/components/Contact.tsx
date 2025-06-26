@@ -56,8 +56,9 @@ export const Contact: React.FC = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-6 text-gray-800 dark:text-white tracking-tight drop-shadow-lg">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-6 text-gray-800 dark:text-white tracking-tight drop-shadow-lg flex items-center justify-center gap-3">
             Get In Touch
+            <Send className="w-12 h-12 text-purple-600" />
           </h2>
           <p className="text-center text-lg text-gray-600 dark:text-gray-300 mb-16 max-w-2xl mx-auto">
             Have a project in mind? Let's discuss how we can work together to bring your ideas to life.

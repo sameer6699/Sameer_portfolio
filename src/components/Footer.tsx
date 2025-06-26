@@ -18,7 +18,7 @@ export const Footer: React.FC = () => {
             className="mb-8"
           >
             <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Alex Johnson
+              Sameer Jadhav
             </h3>
             <p className="text-gray-400 max-w-md mx-auto">
               Creating beautiful, functional web experiences that make a difference.
@@ -33,11 +33,11 @@ export const Footer: React.FC = () => {
           >
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-gray-400 text-sm flex items-center gap-2">
-                Made with <Heart className="w-4 h-4 text-red-500" fill="currentColor" /> by Alex Johnson
+                Made with <Heart className="w-4 h-4 text-red-500" fill="currentColor" /> by Sameer Jadhav
               </p>
               
               <p className="text-gray-400 text-sm">
-                © 2024 Alex Johnson. All rights reserved.
+                © 2024 Sameer Jadhav. All rights reserved.
               </p>
             </div>
           </motion.div>

@@ -38,7 +38,7 @@ export const Achievements: React.FC = () => {
         >
           <h2 className="text-4xl font-bold text-center mb-16 text-gray-800 dark:text-white flex items-center justify-center gap-3">
             Achievements
-            <Trophy className="w-8 h-8 text-yellow-500" />
+            <Trophy className="w-12 h-12 text-purple-600" />
           </h2>
 
           <div className="grid md:grid-cols-1 gap-8">

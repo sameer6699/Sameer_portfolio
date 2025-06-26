@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin } from 'lucide-react';
+import { Calendar, MapPin, GraduationCap } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { Experience as ExperienceType } from '../types';
 
@@ -186,8 +186,9 @@ export const Experience: React.FC = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white">
+          <h2 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white flex items-center justify-center gap-3">
             Experience & Education
+            <GraduationCap className="w-12 h-12 text-purple-600" />
           </h2>
 
           {/* Toggle Button Group */}
