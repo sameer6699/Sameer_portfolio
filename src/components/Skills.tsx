@@ -186,27 +186,7 @@ export const Skills: React.FC = () => {
             })}
           </div>
           {/* Skill Summary */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="mt-16 text-center"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 text-center shadow-lg border border-white/30 dark:border-gray-700/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
-                <div className="text-4xl font-bold text-purple-600 mb-2">{visitorCount}</div>
-                <div className="text-gray-600 dark:text-gray-400">Visitors Count</div>
-              </div>
-              <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 text-center shadow-lg border border-white/30 dark:border-gray-700/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
-                <div className="text-4xl font-bold text-blue-600 mb-2">2</div>
-                <div className="text-gray-600 dark:text-gray-400">Booked Enquiry</div>
-              </div>
-              <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 text-center shadow-lg border border-white/30 dark:border-gray-700/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
-                <div className="text-4xl font-bold text-green-600 mb-2">5</div>
-                <div className="text-gray-600 dark:text-gray-400">User Get in Touch</div>
-              </div>
-            </div>
-          </motion.div>
+          {/* Removed summary counters for Visitors Count, Booked Enquiry, and User Get in Touch as requested */}
         </motion.div>
       </div>
     </section>

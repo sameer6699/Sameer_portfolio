@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Heart, ArrowUp, X, Send } from 'lucide-react';
 import RoboLogo from './assets/robo-logo.png';
 import MetaAvatar from './assets/meta-Avtar-profile.png';
+import { Counter } from './Counter';
 
 export const Footer: React.FC = () => {
   const scrollToTop = () => {
@@ -15,6 +16,36 @@ export const Footer: React.FC = () => {
   ]);
   const [isTyping, setIsTyping] = React.useState(false);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const [visitorCount, setVisitorCount] = React.useState(0);
+  const [meetingCount, setMeetingCount] = React.useState(0);
+  const [getInTouchCount, setGetInTouchCount] = React.useState(0);
+
+  React.useEffect(() => {
+    // Visitor Count
+    const countKey = 'portfolioVisitorCount';
+    let count = localStorage.getItem(countKey);
+    if (count === null) count = '20';
+    let numericCount = Number(count);
+    const visitedKey = 'hasVisitedPortfolio';
+    if (!localStorage.getItem(visitedKey)) {
+      numericCount += 1;
+      localStorage.setItem(visitedKey, 'true');
+    }
+    localStorage.setItem(countKey, numericCount.toString());
+    setVisitorCount(numericCount);
+
+    // Meeting Count
+    const meetingKey = 'portfolioMeetingCount';
+    let meeting = localStorage.getItem(meetingKey);
+    if (meeting === null) meeting = '5';
+    setMeetingCount(Number(meeting));
+
+    // Get In Touch Count
+    const getInTouchKey = 'portfolioGetInTouchCount';
+    let getInTouch = localStorage.getItem(getInTouchKey);
+    if (getInTouch === null) getInTouch = '10';
+    setGetInTouchCount(Number(getInTouch));
+  }, []);
 
   React.useEffect(() => {
     if (isChatOpen) {
@@ -77,6 +108,23 @@ export const Footer: React.FC = () => {
             <p className="text-gray-400 max-w-md mx-auto">
               Creating beautiful, functional web experiences that make a difference.
             </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="flex flex-wrap justify-center gap-6 mb-6"
+          >
+            <span className="text-xs text-gray-400 border-r border-gray-700 pr-4 last:border-none last:pr-0">
+              Total Visitors Count: <Counter value={visitorCount} className="ml-1 font-semibold text-white" />
+            </span>
+            <span className="text-xs text-gray-400 border-r border-gray-700 pr-4 last:border-none last:pr-0">
+              Schedule Meetings: <Counter value={meetingCount} className="ml-1 font-semibold text-white" />
+            </span>
+            <span className="text-xs text-gray-400">
+              User Get in Touch: <Counter value={getInTouchCount} className="ml-1 font-semibold text-white" />
+            </span>
           </motion.div>
 
           <motion.div

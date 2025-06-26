@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calendar, Clock, User, Check } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -46,6 +46,21 @@ export const BookAppointment: React.FC<BookAppointmentProps> = ({ isOpen, onClos
     reset();
     onClose();
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      // Save current overflow style
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'relative';
+      document.body.style.width = '100vw';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.position = '';
+        document.body.style.width = '';
+      };
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

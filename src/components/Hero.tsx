@@ -20,7 +20,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
     'Tech Enthusiast',
     'Problem Solver',
   ];
-  const techSymbols = ['<>', '{}', '/>', '=>', '()', '[]', 'const', 'let', 'var', 'React', 'Node', 'SQL', 'py', 'git', 'λ', 'ƒ', 'Σ', '∫', '∞', 'Φ'];
+  const techSymbols = ['<>', '{}', '/>', '=>', '()', '[]', 'const', 'let', 'var', 'React', 'Node', 'SQL', 'py', 'git', 'λ', 'ƒ', 'Σ', '∫', '∞', 'Φ', 'γ', 'θ', 'α', 'β'];
   const [cursor, setCursor] = useState<{ x: number | null; y: number | null } | null>(null);
   const [shiftActivated, setShiftActivated] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -216,7 +216,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
             whileTap={{ scale: 0.95 }}
           >
             <Calendar className="w-5 h-5" />
-            Book a Meeting
+            Schedule a Meeting
           </motion.button>
         </motion.div>
       </div>
