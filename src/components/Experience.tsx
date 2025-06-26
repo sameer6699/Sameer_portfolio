@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, GraduationCap } from 'lucide-react';
+import { Calendar, MapPin, GraduationCap, ChevronDown, ChevronUp } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { Experience as ExperienceType } from '../types';
 
 export const Experience: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
   const [activeTab, setActiveTab] = useState<'experience' | 'education'>('experience');
+  const [expandedExperience, setExpandedExperience] = useState<string | null>(null);
 
   const experiences: ExperienceType[] = [
     {
@@ -117,24 +118,26 @@ export const Experience: React.FC = () => {
         {/* Timeline Line */}
         <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-600 to-pink-600"></div>
         
-        {items.map((item, index) => (
-          <motion.div
-            key={item.id}
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: index * 0.2 }}
-            className="relative pl-20 pb-12 last:pb-0"
-          >
-            {/* Timeline Dot */}
+        {items.map((item, index) => {
+          const isExperience = title === 'Professional Experience';
+          const isExpanded = expandedExperience === item.id;
+          return (
             <motion.div
-              initial={{ scale: 0 }}
-              animate={isInView ? { scale: 1 } : {}}
-              transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
-              className="absolute left-6 w-4 h-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full border-4 border-white dark:border-gray-900"
-            />
-            
-            {/* Content Card */}
-            <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 dark:border-gray-700/20 shadow-lg hover:shadow-xl transition-all duration-300">
+              key={item.id}
+              initial={{ opacity: 0, x: -50 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, delay: index * 0.2 }}
+              className="relative pl-20 pb-12 last:pb-0"
+            >
+              {/* Timeline Dot */}
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={isInView ? { scale: 1 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
+                className="absolute left-6 w-4 h-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full border-4 border-white dark:border-gray-900"
+              />
+              
+              {/* Content Card */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
                 <div>
                   <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-1">
@@ -154,25 +157,43 @@ export const Experience: React.FC = () => {
                     {item.location}
                   </div>
                 </div>
+                {/* Arrow Button for Experience Cards */}
+                {isExperience && (
+                  <button
+                    className="ml-4 p-2 rounded-full hover:bg-purple-100 dark:hover:bg-purple-900/40 transition"
+                    aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
+                    onClick={() => setExpandedExperience(isExpanded ? null : item.id)}
+                    type="button"
+                  >
+                    {isExpanded ? (
+                      <ChevronUp className="w-6 h-6 text-purple-600" />
+                    ) : (
+                      <ChevronDown className="w-6 h-6 text-purple-600" />
+                    )}
+                  </button>
+                )}
               </div>
               
-              <ul className="space-y-2">
-                {item.description.map((desc, descIndex) => (
-                  <motion.li
-                    key={descIndex}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.5, delay: index * 0.2 + 0.5 + descIndex * 0.1 }}
-                    className="flex items-start gap-3 text-gray-600 dark:text-gray-300"
-                  >
-                    <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0" />
-                    {desc}
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-        ))}
+              {/* Collapsible Description */}
+              {(!isExperience || isExpanded) && (
+                <ul className="space-y-2">
+                  {item.description.map((desc, descIndex) => (
+                    <motion.li
+                      key={descIndex}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={isInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ duration: 0.5, delay: index * 0.2 + 0.5 + descIndex * 0.1 }}
+                      className="flex items-start gap-3 text-gray-600 dark:text-gray-300"
+                    >
+                      <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0" />
+                      {desc}
+                    </motion.li>
+                  ))}
+                </ul>
+              )}
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );

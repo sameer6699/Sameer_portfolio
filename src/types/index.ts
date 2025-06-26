@@ -7,7 +7,7 @@ export interface Project {
   liveUrl?: string;
   githubUrl?: string;
   featured: boolean;
-  category: 'freelancing' | 'academic';
+  category: 'freelancing' | 'academic' | 'openSource';
 }
 
 export interface Experience {

@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Github, Filter } from 'lucide-react';
+import { ExternalLink, Github, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { Project } from '../types';
+import GSOC2024Img from './assets/GSOC-2024.png';
 
 export const Portfolio: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [activeCategory, setActiveCategory] = useState<'freelancing' | 'academic'>('freelancing');
+  const [activeCategory, setActiveCategory] = useState<'freelancing' | 'academic' | 'openSource' | 'all'>('freelancing');
+  const projectRowRef = useRef<HTMLDivElement>(null);
 
   const projects: Project[] = [
     {
@@ -76,21 +77,60 @@ export const Portfolio: React.FC = () => {
       featured: false,
       category: 'academic',
     },
+    {
+      id: '10',
+      title: 'Open Source UI Library',
+      description: 'Contributed components and bug fixes to a popular open source React UI library.',
+      image: 'https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=600',
+      tags: ['React', 'Open Source', 'UI'],
+      liveUrl: 'https://github.com/example/ui-library',
+      githubUrl: 'https://github.com/example/ui-library',
+      featured: false,
+      category: 'openSource',
+    },
+    {
+      id: '11',
+      title: 'Google Summer of Code 2024 - CVAT',
+      description: `Contributed to CVAT (Computer Vision Annotation Tool) as part of Google Summer of Code 2024.\n\nCVAT is a free, open-source, web-based image and video annotation tool for labeling data for computer vision algorithms. It supports object detection, image classification, and segmentation, with features like keyframe interpolation, semi-automatic annotation, and customizable dashboards.\n\nMy project focused on introducing customizable keyboard shortcuts, allowing users to tailor keymaps for their annotation workflows. This improved efficiency and flexibility for data annotation teams.\n\nMentors: bsekachev, Maria Khrustaleva\nOrganization: CVAT\nTechnologies: Python, Django, React, TypeScript, Cypress\nRead more: https://www.cvat.ai/post/introduction-to-cvat-ai-best-image-annotation-tool-explained-in-simple-terms`,
+      image: GSOC2024Img,
+      tags: ['GSOC', 'CVAT', 'Open Source', 'Python', 'Django', 'React', 'TypeScript', 'Cypress'],
+      liveUrl: 'https://www.cvat.ai/',
+      githubUrl: 'https://github.com/opencv/cvat',
+      featured: true,
+      category: 'openSource',
+    },
   ];
 
-  const filters = [
-    { key: 'all', label: 'All Projects' },
-    { key: 'web', label: 'Web Apps' },
-    { key: 'mobile', label: 'Mobile' },
-  ];
+  const filteredProjects = activeCategory === 'all'
+    ? projects
+    : projects.filter(project => project.category === activeCategory);
 
-  const filteredProjects = projects.filter(project => {
-    if (activeFilter === 'all') return true;
-    if (project.category !== activeCategory) return false;
-    if (activeFilter === 'mobile') return project.tags.includes('React Native');
-    if (activeFilter === 'web') return !project.tags.includes('React Native');
-    return true;
-  });
+  const scrollProjects = (direction: 'left' | 'right') => {
+    if (projectRowRef.current) {
+      const scrollAmount = projectRowRef.current.offsetWidth * 0.8;
+      if (direction === 'left') {
+        projectRowRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        projectRowRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (activeCategory !== 'all' && projectRowRef.current) {
+      // Center the first card in the row
+      const row = projectRowRef.current;
+      const firstCard = row.querySelector('div[data-project-card]');
+      if (firstCard) {
+        const card = firstCard as HTMLElement;
+        const rowRect = row.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const scrollLeft =
+          card.offsetLeft - row.offsetLeft - rowRect.width / 2 + cardRect.width / 2;
+        row.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+      }
+    }
+  }, [activeCategory]);
 
   return (
     <section id="portfolio" className="py-20 bg-white/50 dark:bg-gray-900/50">
@@ -101,7 +141,7 @@ export const Portfolio: React.FC = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          {/* Category Toggle Buttons - moved to top */}
+          {/* Category Toggle Buttons - always in this order, now with All Projects at the end */}
           <div className="flex justify-center gap-4 mb-8">
             <button
               onClick={() => setActiveCategory('freelancing')}
@@ -123,6 +163,26 @@ export const Portfolio: React.FC = () => {
             >
               Academic Project
             </button>
+            <button
+              onClick={() => setActiveCategory('openSource')}
+              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center gap-2 ${
+                activeCategory === 'openSource'
+                  ? 'bg-gradient-to-r from-green-600 to-blue-600 text-white shadow-lg shadow-green-500/25'
+                  : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'
+              }`}
+            >
+              Open Source Contribution
+            </button>
+            <button
+              onClick={() => setActiveCategory('all')}
+              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 flex items-center gap-2 ${
+                activeCategory === 'all'
+                  ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow-lg shadow-yellow-500/25'
+                  : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'
+              }`}
+            >
+              All Projects
+            </button>
           </div>
           <h2 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white">
             My Portfolio
@@ -132,97 +192,99 @@ export const Portfolio: React.FC = () => {
             mobile apps, and design.
           </p>
 
-          {/* Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {filters.map((filter) => (
-              <motion.button
-                key={filter.key}
-                onClick={() => setActiveFilter(filter.key)}
-                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 flex items-center gap-2 ${
-                  activeFilter === filter.key
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25'
-                    : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Filter className="w-4 h-4" />
-                {filter.label}
-              </motion.button>
-            ))}
-          </div>
-
-          {/* Projects Grid */}
-          <motion.div 
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-            layout
-          >
-            {filteredProjects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
-                className="group bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/20 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer relative"
-              >
-                <div className="relative overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  {project.featured && (
-                    <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                      Featured
-                    </div>
-                  )}
-                </div>
-                <div className="p-6 pb-16">
-                  <h3 className="text-xl font-bold mb-3 text-gray-800 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                    {project.description.split('\n')[0]}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+          {/* Projects Grid with Horizontal Scroll and Nav Buttons */}
+          <div className="relative flex items-center">
+            <button
+              className="absolute left-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition disabled:opacity-30"
+              style={{ top: '50%', transform: 'translateY(-50%)' }}
+              onClick={() => scrollProjects('left')}
+              aria-label="Scroll Left"
+              type="button"
+            >
+              <ChevronLeft className="w-6 h-6 text-purple-600" />
+            </button>
+            <motion.div
+              ref={projectRowRef}
+              className="flex gap-8 overflow-x-auto scroll-smooth py-2 px-1 hide-scrollbar w-full"
+              layout
+            >
+              {filteredProjects.map((project, index) => (
+                <motion.div
+                  key={project.id}
+                  data-project-card
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ y: -10 }}
+                  className="min-w-[320px] max-w-xs w-full group bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/20 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer relative"
+                >
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    {project.featured && (
+                      <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                        Featured
+                      </div>
+                    )}
                   </div>
-                </div>
-                {/* Action Icons at bottom right */}
-                <div className="absolute bottom-4 right-4 flex gap-2 z-10">
-                  <a
-                    href={project.liveUrl}
-                    className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-purple-700 dark:text-purple-300 hover:bg-white/30 transition-colors border border-purple-200 dark:border-purple-700 text-sm"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="Live Demo"
-                    onClick={e => e.stopPropagation()}
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                  <a
-                    href={project.githubUrl}
-                    className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-purple-700 dark:text-purple-300 hover:bg-white/30 transition-colors border border-purple-200 dark:border-purple-700 text-sm"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="GitHub Repository"
-                    onClick={e => e.stopPropagation()}
-                  >
-                    <Github className="w-4 h-4" />
-                  </a>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+                  <div className="p-6 pb-16">
+                    <h3 className="text-xl font-bold mb-3 text-gray-800 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                      {project.title}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                      {project.description.split('\n')[0]}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Action Icons at bottom right */}
+                  <div className="absolute bottom-4 right-4 flex gap-2 z-10">
+                    <a
+                      href={project.liveUrl}
+                      className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-purple-700 dark:text-purple-300 hover:bg-white/30 transition-colors border border-purple-200 dark:border-purple-700 text-sm"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Live Demo"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                    <a
+                      href={project.githubUrl}
+                      className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-purple-700 dark:text-purple-300 hover:bg-white/30 transition-colors border border-purple-200 dark:border-purple-700 text-sm"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="GitHub Repository"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <Github className="w-4 h-4" />
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+            <button
+              className="absolute right-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition disabled:opacity-30"
+              style={{ top: '50%', transform: 'translateY(-50%)' }}
+              onClick={() => scrollProjects('right')}
+              aria-label="Scroll Right"
+              type="button"
+            >
+              <ChevronRight className="w-6 h-6 text-purple-600" />
+            </button>
+          </div>
 
           {filteredProjects.length === 0 && (
             <motion.div
