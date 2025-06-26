@@ -8,7 +8,7 @@ This is a modern, responsive portfolio website built with React, Vite, and Tailw
 
 ## Screenshots
 
-![Screenshot 1](src/components/assets/image%20(2).png)
+
 
 *(Add more screenshots of your project here)*
 
