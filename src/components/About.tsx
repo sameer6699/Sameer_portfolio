@@ -4,6 +4,7 @@ import { Code, Palette, Heart, Smartphone, BrainCircuit } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import aboutImage from './assets/image (2).png';
 import metaAvtarProfile from './assets/meta-Avtar-profile.png';
+import { AnimatedText } from './AnimatedText';
 
 export const About: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
@@ -14,7 +15,7 @@ export const About: React.FC = () => {
   const pauseTimeout = React.useRef<number | null>(null);
   const AUTO_SCROLL_INTERVAL = 2500; // ms
   const PAUSE_AFTER_INTERACTION = 5000; // ms
-  const [showAIAvatar, setShowAIAvatar] = React.useState(false);
+  const [showAIAvatar, setShowAIAvatar] = React.useState(true);
 
   const techStack = [
     { name: 'React', icon: '⚛️' },
@@ -164,6 +165,13 @@ export const About: React.FC = () => {
                     alt={showAIAvatar ? 'Meta Avatar Profile' : 'About me'}
                     className="relative rounded-2xl shadow-2xl w-full h-auto"
                   />
+                </div>
+                <div className="w-full flex justify-center mt-2">
+                  {showAIAvatar && (
+                    <div className="px-4 py-2 rounded-xl bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 font-semibold shadow text-center max-w-xs">
+                      <AnimatedText texts={["Hey I'm Sam, Sameer's AI Version let's chat with me have some fun...!"]} />
+                    </div>
+                  )}
                 </div>
                 <div className="mt-4 flex justify-center w-full">
                   <button
