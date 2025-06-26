@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Github, ChevronLeft, ChevronRight, Laptop } from 'lucide-react';
+import { ExternalLink, Github, ChevronLeft, ChevronRight} from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { Project } from '../types';
 import GSOC2024Img from './assets/GSOC-2024.png';

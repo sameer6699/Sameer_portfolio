@@ -53,6 +53,14 @@ export const Footer: React.FC = () => {
     if (e.key === "Enter") handleSend();
   };
 
+  const handleCloseChat = () => {
+    setIsChatOpen(false);
+    setMessages([
+      { sender: "sam", text: "Hi! I'm Sam AI. How can I help you today?" },
+    ]);
+    setChatInput("");
+  };
+
   return (
     <footer className="bg-gray-900 dark:bg-black text-white py-12 relative">
       <div className="container mx-auto px-6">
@@ -100,7 +108,7 @@ export const Footer: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1 }}
           >
-            <img src={RoboLogo} alt="Robo Logo" className="w-6 h-6 mr-2" />
+            <img src={MetaAvatar} alt="Meta Avatar" className="w-6 h-6 mr-2 rounded-full object-cover" />
             <span className="font-semibold">Chat with Sam AI</span>
           </motion.button>
           <motion.button
@@ -136,7 +144,7 @@ export const Footer: React.FC = () => {
                 Chat with Sam AI
               </h2>
               <button
-                onClick={() => setIsChatOpen(false)}
+                onClick={handleCloseChat}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
                 aria-label="Close chat modal"
               >

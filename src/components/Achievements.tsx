@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { Trophy } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import HackerRankLogo from './assets/Hacker-rank-logo.png';
 import GoogleCloudLogo from './assets/google-cloud.png';
