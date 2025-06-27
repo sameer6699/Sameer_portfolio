@@ -77,8 +77,7 @@ export const Footer: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // IMPORTANT: Hardcoded for testing. Remember to remove and use environment variables for production.
-          'Authorization': 'Bearer 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'
+          'Authorization': `Bearer ${import.meta.env.VITE_DEEPSEEK_API_KEY}`
         },
         body: JSON.stringify({
           model: "deepseek-chat",
@@ -182,7 +181,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Back to Top Button */}
-        <div className="fixed bottom-8 right-8 flex flex-row gap-4 z-40">
+        <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 flex flex-row gap-4 z-40">
           <motion.button
             onClick={handleChatButtonClick}
             className="p-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
@@ -192,8 +191,8 @@ export const Footer: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1 }}
           >
-            <img src={MetaAvatar} alt="Meta Avatar" className="w-6 h-6 mr-2 rounded-full object-cover" />
-            <span className="font-semibold">Chat with Sam AI</span>
+            <img src={MetaAvatar} alt="Meta Avatar" className="w-6 h-6 rounded-full object-cover" />
+            <span className="font-semibold hidden sm:inline">Chat with Sam AI</span>
           </motion.button>
           <motion.button
             onClick={scrollToTop}
@@ -264,7 +263,7 @@ export const Footer: React.FC = () => {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed top-0 right-0 h-screen w-full sm:w-1/2 bg-gradient-to-br from-blue-50/80 via-white/90 to-cyan-100/80 dark:from-gray-900/90 dark:via-gray-900/95 dark:to-gray-800/90 backdrop-blur-md z-50 shadow-2xl border-l border-white/20 dark:border-gray-700/20 flex flex-col"
+            className="fixed top-0 right-0 h-screen w-full md:w-1/2 lg:w-1/3 bg-gradient-to-br from-blue-50/80 via-white/90 to-cyan-100/80 dark:from-gray-900/90 dark:via-gray-900/95 dark:to-gray-800/90 backdrop-blur-md z-50 shadow-2xl border-l border-white/20 dark:border-gray-700/20 flex flex-col"
             style={{ maxWidth: '100vw' }}
             aria-modal="true"
             role="dialog"

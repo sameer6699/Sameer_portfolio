@@ -9,12 +9,6 @@ import { AnimatedText } from './AnimatedText';
 export const About: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = React.useState(0);
-  const isThrottled = React.useRef(false);
-  const autoScrollTimeout = React.useRef<number | null>(null);
-  const pauseTimeout = React.useRef<number | null>(null);
-  const AUTO_SCROLL_INTERVAL = 2500; // ms
-  const PAUSE_AFTER_INTERACTION = 5000; // ms
   const [showAIAvatar, setShowAIAvatar] = React.useState(true);
 
   const techStack = [
@@ -61,82 +55,6 @@ export const About: React.FC = () => {
     { icon: Heart, text: 'Open source contributor' },
   ];
 
-  const handleScroll = () => {
-    if (isThrottled.current) return;
-    isThrottled.current = true;
-    setTimeout(() => {
-      isThrottled.current = false;
-      if (scrollContainerRef.current) {
-        const { scrollLeft, children, clientWidth } = scrollContainerRef.current;
-        const containerCenter = scrollLeft + clientWidth / 2;
-        
-        let closestIndex = 0;
-        let minDistance = Infinity;
-
-        Array.from(children).forEach((child, index) => {
-          const item = child as HTMLElement;
-          const itemCenter = item.offsetLeft + item.clientWidth / 2;
-          const distance = Math.abs(itemCenter - containerCenter);
-
-          if (distance < minDistance) {
-            minDistance = distance;
-            closestIndex = index;
-          }
-        });
-        setActiveIndex(closestIndex);
-      }
-    }, 100);
-  };
-
-  // --- Auto-scroll logic ---
-  React.useEffect(() => {
-    if (!isInView) return;
-    // Clear any previous timeouts
-    if (autoScrollTimeout.current) clearTimeout(autoScrollTimeout.current);
-    if (pauseTimeout.current) clearTimeout(pauseTimeout.current);
-
-    const startAutoScroll = () => {
-      autoScrollTimeout.current = setTimeout(() => {
-        setActiveIndex((prev) => (prev + 1) % facts.length);
-      }, AUTO_SCROLL_INTERVAL);
-    };
-    startAutoScroll();
-    return () => {
-      if (autoScrollTimeout.current) clearTimeout(autoScrollTimeout.current);
-      if (pauseTimeout.current) clearTimeout(pauseTimeout.current);
-    };
-  }, [activeIndex, isInView]);
-
-  // Pause auto-scroll on user interaction
-  const pauseAutoScroll = () => {
-    if (autoScrollTimeout.current) clearTimeout(autoScrollTimeout.current);
-    if (pauseTimeout.current) clearTimeout(pauseTimeout.current);
-    pauseTimeout.current = setTimeout(() => {
-      setActiveIndex((prev) => prev); // trigger effect to resume auto-scroll
-    }, PAUSE_AFTER_INTERACTION);
-  };
-
-  const scrollToIndex = (index: number) => {
-    // Clamp index to valid range
-    const clampedIndex = Math.max(0, Math.min(index, facts.length - 1));
-    if (scrollContainerRef.current) {
-      const item = scrollContainerRef.current.children[clampedIndex] as HTMLElement;
-      if (item) {
-        item.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center',
-        });
-        setTimeout(() => setActiveIndex(clampedIndex), 350);
-      } else {
-        setActiveIndex(clampedIndex);
-      }
-    } else {
-      setActiveIndex(clampedIndex);
-    }
-    pauseAutoScroll();
-  };
-
   return (
     <section id="about" className="py-20 bg-white/50 dark:bg-gray-900/50">
       <div className="container mx-auto px-6">
@@ -147,11 +65,11 @@ export const About: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto"
         >
-          <h2 className="text-4xl font-bold text-center mb-16 text-gray-800 dark:text-white">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12 sm:mb-16 text-gray-800 dark:text-white">
             About Me
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -199,22 +117,21 @@ export const About: React.FC = () => {
                 My journey in tech is driven by a passion for creating impactful digital experiences. I specialize in full-stack development, always exploring new technologies, and contributing to open-source. I'm obsessed with crafting pixel-perfect interfaces that are both beautiful and user-friendly. Reach out if you want to talk to me about emerging tech, creating software products or Football.
               </p>
 
-              <div className="flex items-center gap-2 mt-8">
-                {/* Single Fact Carousel Animation */}
-                <div className="flex justify-center w-full">
+              <div className="space-y-4 mt-8">
+                {facts.map((fact, index) => (
                   <motion.div
-                    key={activeIndex}
-                    initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -30, scale: 0.9 }}
-                    transition={{ duration: 0.5 }}
-                    className="flex items-center gap-3 p-5 rounded-xl bg-white/70 dark:bg-gray-800/70 backdrop-blur-md shadow-xl ring-4 ring-purple-400/70"
-                    style={{ minWidth: 260, maxWidth: 320 }}
+                    key={index}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={isInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
+                    className="flex items-center gap-4 p-4 rounded-lg bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm"
                   >
-                    {React.createElement(facts[activeIndex].icon, { className: 'w-7 h-7 text-purple-600' })}
-                    <span className="text-lg font-bold text-gray-700 dark:text-gray-200 whitespace-nowrap">{facts[activeIndex].text}</span>
+                    <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-full">
+                      <fact.icon className="w-6 h-6 text-purple-600 dark:text-purple-300" />
+                    </div>
+                    <span className="font-semibold text-gray-700 dark:text-gray-200">{fact.text}</span>
                   </motion.div>
-                </div>
+                ))}
               </div>
             </motion.div>
           </div>

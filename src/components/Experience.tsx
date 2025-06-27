@@ -117,7 +117,7 @@ export const Experience: React.FC = () => {
       </h3>
       <div className="relative">
         {/* Timeline Line */}
-        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-600 to-pink-600"></div>
+        <div className="absolute left-6 sm:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-600 to-pink-600"></div>
         
         {items.map((item, index) => {
           const isExperience = title === 'Professional Experience';
@@ -128,14 +128,14 @@ export const Experience: React.FC = () => {
               initial={{ opacity: 0, x: -50 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}
-              className="relative pl-20 pb-12 last:pb-0"
+              className="relative pl-16 sm:pl-20 pb-12 last:pb-0"
             >
               {/* Timeline Dot */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={isInView ? { scale: 1 } : {}}
                 transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
-                className="absolute left-6 w-4 h-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full border-4 border-white dark:border-gray-900"
+                className="absolute left-4 sm:left-6 w-4 h-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full border-4 border-white dark:border-gray-900"
               />
               
               {/* Content Card */}
@@ -208,16 +208,16 @@ export const Experience: React.FC = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white flex items-center justify-center gap-3">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white flex items-center justify-center gap-3">
             Experience & Education
-            <img src={GraduationLogo} alt="Graduation Logo" className="w-12 h-12 inline-block align-middle" />
+            <img src={GraduationLogo} alt="Graduation Logo" className="w-10 h-10 sm:w-12 sm:h-12 inline-block align-middle" />
           </h2>
 
           {/* Toggle Button Group */}
           <div className="flex justify-center mb-12 gap-4">
             <button
               onClick={() => setActiveTab('experience')}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center gap-2 ${
+              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center gap-2 ${
                 activeTab === 'experience'
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25'
                   : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'
@@ -227,7 +227,7 @@ export const Experience: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('education')}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 flex items-center gap-2 ${
+              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 flex items-center gap-2 ${
                 activeTab === 'education'
                   ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg shadow-pink-500/25'
                   : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'

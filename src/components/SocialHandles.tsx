@@ -71,13 +71,13 @@ export const SocialHandles: React.FC = () => {
     <section id="social-handles" className="bg-white/50 dark:bg-gray-900/50 min-h-screen flex items-center justify-center">
       <div className="container mx-auto px-6">
         <div className="w-full flex flex-col items-center justify-center">
-          <h2 className="text-4xl font-bold text-center mb-10 text-gray-800 dark:text-white flex items-center justify-center gap-3">
-            <img src={SocialIcon} alt="Social Icon" className="w-10 h-10 mr-2 inline-block align-middle" />
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 text-gray-800 dark:text-white flex items-center justify-center gap-3">
+            <img src={SocialIcon} alt="Social Icon" className="w-8 h-8 sm:w-10 sm:h-10 mr-2 inline-block align-middle" />
             Social Handles
           </h2>
           <div className="relative flex items-center w-full">
             <button
-              className="absolute left-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-blue-100 dark:hover:bg-blue-900/40 transition disabled:opacity-30"
+              className="absolute left-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-blue-100 dark:hover:bg-blue-900/40 transition disabled:opacity-30 hidden md:block"
               style={{ top: '50%', transform: 'translateY(-50%)' }}
               onClick={() => scrollHandles('left')}
               aria-label="Scroll Left"
@@ -87,7 +87,7 @@ export const SocialHandles: React.FC = () => {
             </button>
             <div
               ref={handlesRowRef}
-              className="flex flex-row gap-8 overflow-x-hidden scroll-smooth py-2 px-1 hide-scrollbar w-full"
+              className="flex flex-row gap-8 overflow-x-auto scroll-smooth py-2 px-1 hide-scrollbar w-full"
               style={{ minHeight: '320px' }}
             >
               {socialPlatforms.map((platform) => (
@@ -96,16 +96,16 @@ export const SocialHandles: React.FC = () => {
                   href={platform.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex flex-col items-center justify-center bg-white dark:bg-gray-900 bg-gradient-to-br from-blue-50/40 to-purple-50/40 dark:from-gray-900/40 dark:to-blue-900/40 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 px-8 py-10 transition-transform hover:-translate-y-2 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-blue-400 min-w-[320px] max-w-xs w-full mx-2"
+                  className="flex flex-col items-center justify-center bg-white dark:bg-gray-900 bg-gradient-to-br from-blue-50/40 to-purple-50/40 dark:from-gray-900/40 dark:to-blue-900/40 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 px-6 py-8 sm:px-8 sm:py-10 transition-transform hover:-translate-y-2 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-blue-400 min-w-[300px] sm:min-w-[320px] max-w-xs w-full mx-2"
                 >
                   {platform.logo ? (
                     <img
                       src={platform.logo}
                       alt={platform.name + ' logo'}
-                      className="w-16 h-16 object-contain mb-4"
+                      className="w-12 h-12 sm:w-16 sm:h-16 object-contain mb-4"
                     />
                   ) : (
-                    <div className="w-16 h-16 flex items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-full mb-4 text-2xl font-bold text-gray-500 dark:text-gray-300">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-full mb-4 text-2xl font-bold text-gray-500 dark:text-gray-300">
                       {platform.name[0]}
                     </div>
                   )}
@@ -119,7 +119,7 @@ export const SocialHandles: React.FC = () => {
               ))}
             </div>
             <button
-              className="absolute right-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-blue-100 dark:hover:bg-blue-900/40 transition disabled:opacity-30"
+              className="absolute right-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-blue-100 dark:hover:bg-blue-900/40 transition disabled:opacity-30 hidden md:block"
               style={{ top: '50%', transform: 'translateY(-50%)' }}
               onClick={() => scrollHandles('right')}
               aria-label="Scroll Right"

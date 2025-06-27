@@ -143,10 +143,10 @@ export const Portfolio: React.FC = () => {
           transition={{ duration: 0.8 }}
         >
           {/* Category Toggle Buttons - always in this order, now with All Projects at the end */}
-          <div className="flex justify-center gap-4 mb-8">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8">
             <button
               onClick={() => setActiveCategory('freelancing')}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center gap-2 ${
+              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center gap-2 ${
                 activeCategory === 'freelancing'
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25'
                   : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'
@@ -156,7 +156,7 @@ export const Portfolio: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveCategory('academic')}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 flex items-center gap-2 ${
+              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 flex items-center gap-2 ${
                 activeCategory === 'academic'
                   ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg shadow-pink-500/25'
                   : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'
@@ -166,7 +166,7 @@ export const Portfolio: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveCategory('openSource')}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center gap-2 ${
+              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center gap-2 ${
                 activeCategory === 'openSource'
                   ? 'bg-gradient-to-r from-green-600 to-blue-600 text-white shadow-lg shadow-green-500/25'
                   : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'
@@ -176,7 +176,7 @@ export const Portfolio: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveCategory('all')}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 flex items-center gap-2 ${
+              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 flex items-center gap-2 ${
                 activeCategory === 'all'
                   ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow-lg shadow-yellow-500/25'
                   : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'
@@ -185,9 +185,9 @@ export const Portfolio: React.FC = () => {
               All Projects
             </button>
           </div>
-          <h2 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white flex items-center justify-center gap-3">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white flex items-center justify-center gap-3">
             My Portfolio
-            <img src={ComputerLogo} alt="Computer Logo" className="w-12 h-12 inline-block align-middle" />
+            <img src={ComputerLogo} alt="Computer Logo" className="w-10 h-10 sm:w-12 sm:h-12 inline-block align-middle" />
           </h2>
           <p className="text-center text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
             Here are some of my recent projects that showcase my skills in web development, 
@@ -197,7 +197,7 @@ export const Portfolio: React.FC = () => {
           {/* Projects Grid with Horizontal Scroll and Nav Buttons */}
           <div className="relative flex items-center">
             <button
-              className="absolute left-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition disabled:opacity-30"
+              className="absolute left-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition disabled:opacity-30 hidden md:block"
               style={{ top: '50%', transform: 'translateY(-50%)' }}
               onClick={() => scrollProjects('left')}
               aria-label="Scroll Left"
@@ -278,7 +278,7 @@ export const Portfolio: React.FC = () => {
               ))}
             </motion.div>
             <button
-              className="absolute right-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition disabled:opacity-30"
+              className="absolute right-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition disabled:opacity-30 hidden md:block"
               style={{ top: '50%', transform: 'translateY(-50%)' }}
               onClick={() => scrollProjects('right')}
               aria-label="Scroll Right"

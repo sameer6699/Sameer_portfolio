@@ -61,7 +61,7 @@ export const Contact: React.FC = () => {
         >
           <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-6 text-gray-800 dark:text-white tracking-tight drop-shadow-lg flex items-center justify-center gap-3">
             Get In Touch
-            <img src={GetInTouchLogo} alt="Get In Touch Logo" className="w-12 h-12 object-contain" />
+            <img src={GetInTouchLogo} alt="Get In Touch Logo" className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
           </h2>
           <p className="text-center text-lg text-gray-600 dark:text-gray-300 mb-16 max-w-2xl mx-auto">
             Have a project in mind? Let's discuss how we can work together to bring your ideas to life.

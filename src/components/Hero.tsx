@@ -4,6 +4,17 @@ import { AnimatedText } from './AnimatedText';
 import profileImage from './assets/image (2).png';
 import { useRef, useState, useEffect } from 'react';
 
+interface SymbolBase {
+  top: number;
+  left: number;
+  fontSize: number;
+  xMovement: number;
+  yMovement: number;
+  duration: number;
+  delay: number;
+  rotate: number;
+}
+
 interface HeroProps {
   onBookAppointment: () => void;
 }
@@ -47,8 +58,8 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
   }, []);
 
   // Store random base positions for each symbol so they don't change on every render
-  const symbolBases = useRef(
-    Array.from({ length: 140 }, () => ({
+  const symbolBases = useRef<SymbolBase[]>(
+    Array.from({ length: window.innerWidth < 768 ? 40 : 140 }, () => ({
       top: Math.random() * 100,
       left: Math.random() * 100,
       fontSize: Math.random() * 1.5 + 0.75,
@@ -152,12 +163,12 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
           transition={{ duration: 0.8 }}
           className="mb-8"
         >
-          <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 p-1">
+          <div className="w-28 h-28 sm:w-32 sm:h-32 mx-auto mb-6 sm:mb-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 p-1">
             <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 flex items-center justify-center">
               <img
                 src={profileImage}
                 alt="Profile"
-                className="w-28 h-28 rounded-full object-cover"
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover"
               />
             </div>
           </div>
@@ -167,7 +178,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-5xl md:text-7xl font-bold mb-6 text-gray-800 dark:text-white"
+          className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 sm:mb-6 text-gray-800 dark:text-white"
         >
           Hi, I'm{' '}
           <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
@@ -179,7 +190,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-2xl md:text-3xl text-gray-600 dark:text-gray-300 mb-8 h-12"
+          className="text-xl sm:text-2xl md:text-3xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 h-12"
         >
           <AnimatedText texts={roles} />
         </motion.div>
@@ -188,7 +199,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-lg text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto"
+          className="text-md sm:text-lg text-gray-600 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto"
         >
           I create beautiful, functional websites and applications that solve real-world problems.
           Let's build something amazing together.

@@ -90,7 +90,7 @@ export const Skills: React.FC = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-4xl font-bold text-center mb-16 text-gray-800 dark:text-white">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12 sm:mb-16 text-gray-800 dark:text-white">
             Skills & Expertise
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">

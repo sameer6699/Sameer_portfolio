@@ -58,13 +58,13 @@ export const Achievements: React.FC = () => {
           className="max-w-4xl mx-auto"
         >
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-800 dark:text-white flex items-center justify-center gap-3 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white flex items-center justify-center gap-3 mb-4">
               Achievements
-              <img src={AchievementLogo} alt="Achievement Logo" className="w-12 h-12 object-contain" />
+              <img src={AchievementLogo} alt="Achievement Logo" className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
             </h2>
             <button
               onClick={() => setShowOther(!showOther)}
-              className={`px-6 py-3 font-medium rounded-full transition-all duration-500 ease-in-out shadow-md hover:shadow-lg text-sm relative overflow-hidden transform hover:scale-105 active:scale-95 ${
+              className={`px-4 py-2 sm:px-6 sm:py-3 font-medium rounded-full transition-all duration-500 ease-in-out shadow-md hover:shadow-lg text-sm relative overflow-hidden transform hover:scale-105 active:scale-95 ${
                 showOther 
                   ? 'bg-green-600 hover:bg-green-700 text-white' 
                   : 'bg-gray-300 hover:bg-gray-400 text-gray-700 dark:bg-gray-600 dark:hover:bg-gray-700 dark:text-gray-200'
@@ -106,13 +106,13 @@ export const Achievements: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                  className="flex items-center gap-6 p-6 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg"
+                  className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 sm:gap-6 p-6 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg"
                 >
                   {achievement.icon === 'hackerRank' && (
-                    <img src={HackerRankLogo} alt="HackerRank Logo" className="w-10 h-10 object-contain" />
+                    <img src={HackerRankLogo} alt="HackerRank Logo" className="w-10 h-10 object-contain flex-shrink-0" />
                   )}
                   {achievement.icon === 'googleCloud' && (
-                    <img src={GoogleCloudLogo} alt="Google Cloud Logo" className="w-10 h-10 object-contain" />
+                    <img src={GoogleCloudLogo} alt="Google Cloud Logo" className="w-10 h-10 object-contain flex-shrink-0" />
                   )}
                   <div>
                     <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{achievement.text}</h3>

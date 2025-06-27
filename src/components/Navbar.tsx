@@ -82,13 +82,25 @@ export const Navbar: React.FC = () => {
           <ThemeToggle />
           {/* Mobile menu button */}
           <button
-            className="md:hidden flex flex-col gap-1.5 focus:outline-none"
+            className="md:hidden flex flex-col gap-1.5 focus:outline-none z-10"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle navigation"
           >
-            <span className="w-7 h-1 bg-purple-500 rounded transition-all" />
-            <span className="w-7 h-1 bg-pink-500 rounded transition-all" />
-            <span className="w-7 h-1 bg-purple-500 rounded transition-all" />
+            <span
+              className={`w-7 h-1 bg-purple-500 rounded transition-all ${
+                isOpen ? 'rotate-45 translate-y-2.5' : ''
+              }`}
+            />
+            <span
+              className={`w-7 h-1 bg-pink-500 rounded transition-all ${
+                isOpen ? 'opacity-0' : ''
+              }`}
+            />
+            <span
+              className={`w-7 h-1 bg-purple-500 rounded transition-all ${
+                isOpen ? '-rotate-45 -translate-y-2.5' : ''
+              }`}
+            />
           </button>
         </div>
       </div>
