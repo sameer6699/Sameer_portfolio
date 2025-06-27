@@ -18,6 +18,7 @@ export const Footer: React.FC = () => {
   const [visitorCount, setVisitorCount] = React.useState(0);
   const [meetingCount, setMeetingCount] = React.useState(0);
   const [getInTouchCount, setGetInTouchCount] = React.useState(0);
+  const [isPrivacyOpen, setIsPrivacyOpen] = React.useState(false);
 
   React.useEffect(() => {
     // Visitor Count
@@ -62,21 +63,48 @@ export const Footer: React.FC = () => {
     }
   }, [messages, isChatOpen]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (chatInput.trim() === "") return;
-    setMessages((msgs) => [
-      ...msgs,
-      { sender: "user", text: chatInput },
-    ]);
+
+    const userMessage = { sender: "user", text: chatInput };
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     setChatInput("");
     setIsTyping(true);
-    setTimeout(() => {
-      setMessages((msgs) => [
-        ...msgs,
-        { sender: "sam", text: "I'm just a demo for now!" },
-      ]);
+
+    try {
+      const response = await fetch("https://api.deepseek.com/chat/completions", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // IMPORTANT: Hardcoded for testing. Remember to remove and use environment variables for production.
+          'Authorization': 'Bearer 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'
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: newMessages.map(msg => ({
+            role: msg.sender === 'sam' ? 'assistant' : 'user',
+            content: msg.text
+          })),
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response from AI');
+      }
+
+      const data = await response.json();
+      const aiMessage = { sender: "sam", text: data.choices[0].message.content };
+
+      setMessages((msgs) => [...msgs, aiMessage]);
+
+    } catch (error) {
+      console.error("Error calling DeepSeek API:", error);
+      const errorMessage = { sender: "sam", text: "Sorry, I'm having trouble connecting to my brain right now." };
+      setMessages((msgs) => [...msgs, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 900);
+    }
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -89,6 +117,15 @@ export const Footer: React.FC = () => {
       { sender: "sam", text: "Hi! I'm Sam AI. How can I help you today?" },
     ]);
     setChatInput("");
+  };
+
+  // Handler for Chat with Sam AI button
+  const handleChatButtonClick = () => {
+    if (localStorage.getItem('samAIPrivacyAccepted') === 'true') {
+      setIsChatOpen(true);
+    } else {
+      setIsPrivacyOpen(true);
+    }
   };
 
   return (
@@ -147,7 +184,7 @@ export const Footer: React.FC = () => {
         {/* Back to Top Button */}
         <div className="fixed bottom-8 right-8 flex flex-row gap-4 z-40">
           <motion.button
-            onClick={() => setIsChatOpen(true)}
+            onClick={handleChatButtonClick}
             className="p-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -170,6 +207,55 @@ export const Footer: React.FC = () => {
             <ArrowUp className="w-5 h-5" />
           </motion.button>
         </div>
+
+        {/* Privacy Policy Modal */}
+        {isPrivacyOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setIsPrivacyOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white dark:bg-gray-900 rounded-2xl max-w-lg w-full p-8 border border-gray-200 dark:border-gray-700 shadow-xl"
+              onClick={e => e.stopPropagation()}
+            >
+              <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Privacy Policy</h2>
+              <div className="text-gray-700 dark:text-gray-300 text-sm mb-6 max-h-60 overflow-y-auto">
+                <p>
+                  By using the Sam AI chat, you agree that your messages may be processed for the purpose of providing responses. Do not share sensitive personal information. Your data will not be stored or used for any other purpose.
+                </p>
+                <ul className="list-disc pl-5 mt-2">
+                  <li>This chat is for demonstration purposes only.</li>
+                  <li>Do not enter confidential or sensitive information.</li>
+                  <li>Messages may be processed to generate replies, but are not stored.</li>
+                </ul>
+              </div>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setIsPrivacyOpen(false)}
+                  className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                >
+                  Decline
+                </button>
+                <button
+                  onClick={() => {
+                    localStorage.setItem('samAIPrivacyAccepted', 'true');
+                    setIsPrivacyOpen(false);
+                    setIsChatOpen(true);
+                  }}
+                  className="px-4 py-2 rounded bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold hover:from-cyan-600 hover:to-blue-600 transition"
+                >
+                  Accept & Continue
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
 
         {/* Chat with Sam AI Modal */}
         {isChatOpen && (
