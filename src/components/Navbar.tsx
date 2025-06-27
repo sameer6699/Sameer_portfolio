@@ -45,7 +45,7 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="fixed top-4 left-0 w-full z-50 flex justify-center pointer-events-none">
+    <nav className="fixed top-4 left-0 w-full z-50 flex flex-col items-center pointer-events-none">
       <div className="w-full max-w-5xl mx-auto bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-xl rounded-2xl px-6 py-2 flex justify-between items-center gap-4 pointer-events-auto transition-all duration-300 md:mt-0">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -82,7 +82,7 @@ export const Navbar: React.FC = () => {
           <ThemeToggle />
           {/* Mobile menu button */}
           <button
-            className="md:hidden flex flex-col gap-1.5 focus:outline-none z-10"
+            className="md:hidden flex flex-col justify-center items-center gap-1.5 focus:outline-none z-10 w-8 h-8"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle navigation"
           >
@@ -110,7 +110,7 @@ export const Navbar: React.FC = () => {
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          className="md:hidden bg-white/95 dark:bg-gray-900/95 px-6 pb-4 pt-2 shadow-lg"
+          className="w-full max-w-5xl md:hidden bg-white/95 dark:bg-gray-900/95 px-6 pb-4 pt-2 shadow-lg rounded-2xl mt-2"
         >
           <div className="flex flex-col gap-4">
             {navLinks.map(link => (

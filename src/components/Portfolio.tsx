@@ -143,10 +143,10 @@ export const Portfolio: React.FC = () => {
           transition={{ duration: 0.8 }}
         >
           {/* Category Toggle Buttons - always in this order, now with All Projects at the end */}
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8">
+          <div className="flex flex-nowrap justify-start sm:justify-center gap-2 sm:gap-4 mb-8 overflow-x-auto pb-2 hide-scrollbar">
             <button
               onClick={() => setActiveCategory('freelancing')}
-              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center gap-2 ${
+              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center gap-2 whitespace-nowrap ${
                 activeCategory === 'freelancing'
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25'
                   : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'
@@ -156,7 +156,7 @@ export const Portfolio: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveCategory('academic')}
-              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 flex items-center gap-2 ${
+              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 flex items-center gap-2 whitespace-nowrap ${
                 activeCategory === 'academic'
                   ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg shadow-pink-500/25'
                   : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'
@@ -166,7 +166,7 @@ export const Portfolio: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveCategory('openSource')}
-              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center gap-2 ${
+              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center gap-2 whitespace-nowrap ${
                 activeCategory === 'openSource'
                   ? 'bg-gradient-to-r from-green-600 to-blue-600 text-white shadow-lg shadow-green-500/25'
                   : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'
@@ -176,7 +176,7 @@ export const Portfolio: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveCategory('all')}
-              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 flex items-center gap-2 ${
+              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 flex items-center gap-2 whitespace-nowrap ${
                 activeCategory === 'all'
                   ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow-lg shadow-yellow-500/25'
                   : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'

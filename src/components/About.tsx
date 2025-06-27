@@ -47,14 +47,6 @@ export const About: React.FC = () => {
     { name: 'Postman', icon: '📮' },
   ];
 
-  const facts = [
-    { icon: Code, text: 'Full Stack Developer' },
-    { icon: Smartphone, text: 'Mobile App Developer' },
-    { icon: BrainCircuit, text: 'AI/ML Enthusiast' },
-    { icon: Palette, text: 'Pixel-perfect design obsessed' },
-    { icon: Heart, text: 'Open source contributor' },
-  ];
-
   return (
     <section id="about" className="py-20 bg-white/50 dark:bg-gray-900/50">
       <div className="container mx-auto px-6">
@@ -116,23 +108,6 @@ export const About: React.FC = () => {
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                 My journey in tech is driven by a passion for creating impactful digital experiences. I specialize in full-stack development, always exploring new technologies, and contributing to open-source. I'm obsessed with crafting pixel-perfect interfaces that are both beautiful and user-friendly. Reach out if you want to talk to me about emerging tech, creating software products or Football.
               </p>
-
-              <div className="space-y-4 mt-8">
-                {facts.map((fact, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
-                    className="flex items-center gap-4 p-4 rounded-lg bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm"
-                  >
-                    <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-full">
-                      <fact.icon className="w-6 h-6 text-purple-600 dark:text-purple-300" />
-                    </div>
-                    <span className="font-semibold text-gray-700 dark:text-gray-200">{fact.text}</span>
-                  </motion.div>
-                ))}
-              </div>
             </motion.div>
           </div>
 

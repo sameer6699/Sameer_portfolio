@@ -263,7 +263,7 @@ export const Footer: React.FC = () => {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed top-0 right-0 h-screen w-full md:w-1/2 lg:w-1/3 bg-gradient-to-br from-blue-50/80 via-white/90 to-cyan-100/80 dark:from-gray-900/90 dark:via-gray-900/95 dark:to-gray-800/90 backdrop-blur-md z-50 shadow-2xl border-l border-white/20 dark:border-gray-700/20 flex flex-col"
+            className="fixed top-0 right-0 h-screen w-full md:w-1/2 lg:w-1/3 bg-gradient-to-br from-blue-50/80 via-white/90 to-cyan-100/80 dark:from-gray-900/90 dark:via-gray-900/95 dark:to-gray-800/90 backdrop-blur-md z-60 shadow-2xl border-l border-white/20 dark:border-gray-700/20 flex flex-col"
             style={{ maxWidth: '100vw' }}
             aria-modal="true"
             role="dialog"
@@ -299,7 +299,7 @@ export const Footer: React.FC = () => {
                         <img src={MetaAvatar} alt="Sam AI" className="w-6 h-6 rounded-full object-cover" />
                       </span>
                     )}
-                    <div className={`relative px-4 py-2 rounded-2xl max-w-xs break-words text-sm shadow-lg ${msg.sender === 'user' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-br-none' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-none'}`}
+                    <div className={`relative px-4 py-2 rounded-2xl max-w-[80%] break-words text-sm shadow-lg ${msg.sender === 'user' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-br-none' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-none'}`}
                       >
                       {msg.text}
                       {/* Bubble tail */}
@@ -317,7 +317,7 @@ export const Footer: React.FC = () => {
                     <span className="w-7 h-7 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow">
                       <img src={MetaAvatar} alt="Sam AI" className="w-6 h-6 rounded-full object-cover" />
                     </span>
-                    <div className="px-4 py-2 rounded-2xl max-w-xs bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm flex items-center gap-1 animate-pulse">
+                    <div className="px-4 py-2 rounded-2xl max-w-[80%] bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm flex items-center gap-1 animate-pulse">
                       <span className="inline-block w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
                       <span className="inline-block w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-75"></span>
                       <span className="inline-block w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></span>
