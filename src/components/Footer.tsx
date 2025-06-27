@@ -182,18 +182,20 @@ export const Footer: React.FC = () => {
 
         {/* Back to Top Button */}
         <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 flex flex-row gap-4 z-40">
-          <motion.button
-            onClick={handleChatButtonClick}
-            className="p-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1 }}
-          >
-            <img src={MetaAvatar} alt="Meta Avatar" className="w-6 h-6 rounded-full object-cover" />
-            <span className="font-semibold hidden sm:inline">Chat with Sam AI</span>
-          </motion.button>
+          {!isChatOpen && (
+            <motion.button
+              onClick={handleChatButtonClick}
+              className="p-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.1 }}
+            >
+              <img src={MetaAvatar} alt="Meta Avatar" className="w-6 h-6 rounded-full object-cover" />
+              <span className="font-semibold hidden sm:inline">Chat with Sam AI</span>
+            </motion.button>
+          )}
           <motion.button
             onClick={scrollToTop}
             className="p-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
@@ -368,22 +370,6 @@ export const Footer: React.FC = () => {
               </div>
             </div>
           </motion.div>
-        )}
-        {/* Hide Chat Button if chat is open */}
-        {!isChatOpen && (
-          <motion.button
-            onClick={handleChatButtonClick}
-            className="p-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-40"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1 }}
-            style={{ pointerEvents: 'auto' }}
-          >
-            <img src={MetaAvatar} alt="Meta Avatar" className="w-6 h-6 rounded-full object-cover" />
-            <span className="font-semibold hidden sm:inline">Chat with Sam AI</span>
-          </motion.button>
         )}
       </div>
     </footer>
