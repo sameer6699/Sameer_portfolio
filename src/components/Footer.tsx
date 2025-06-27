@@ -73,19 +73,17 @@ export const Footer: React.FC = () => {
     setIsTyping(true);
 
     try {
-      const response = await fetch("https://api.deepseek.com/chat/completions", {
+      // Format messages for backend (role/content)
+      const formattedMessages = newMessages.map(msg => ({
+        role: msg.sender === 'sam' ? 'assistant' : 'user',
+        content: msg.text
+      }));
+      const response = await fetch("/api/chat", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_DEEPSEEK_API_KEY}`
         },
-        body: JSON.stringify({
-          model: "deepseek-chat",
-          messages: newMessages.map(msg => ({
-            role: msg.sender === 'sam' ? 'assistant' : 'user',
-            content: msg.text
-          })),
-        })
+        body: JSON.stringify({ messages: formattedMessages }),
       });
 
       if (!response.ok) {
@@ -93,12 +91,16 @@ export const Footer: React.FC = () => {
       }
 
       const data = await response.json();
-      const aiMessage = { sender: "sam", text: data.choices[0].message.content };
+      const aiMessage = { sender: "sam", text: data.response };
 
       setMessages((msgs) => [...msgs, aiMessage]);
 
     } catch (error) {
-      console.error("Error calling DeepSeek API:", error);
+      // Only log error in development mode
+      if (import.meta.env.MODE === 'development') {
+        // eslint-disable-next-line no-console
+        console.error("Error calling NVIDIA NIM API:", error);
+      }
       const errorMessage = { sender: "sam", text: "Sorry, I'm having trouble connecting to my brain right now." };
       setMessages((msgs) => [...msgs, errorMessage]);
     } finally {
