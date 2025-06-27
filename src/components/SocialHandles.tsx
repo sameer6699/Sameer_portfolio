@@ -7,6 +7,7 @@ import RedditLogo from './assets/redit-logo.png';
 import LeetCodeLogo from './assets/leetcode-logo.png';
 import HackerEarthLogo from './assets/hackerearth-logo.png';
 import SocialIcon from './assets/Social-icon.png';
+import DiscordLogo from './assets/discord-logo.png';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 // Import more logos as available, use placeholders for missing ones
 
@@ -45,6 +46,11 @@ const socialPlatforms = [
     name: 'HackerEarth',
     logo: HackerEarthLogo,
     url: 'https://www.hackerearth.com/',
+  },
+  {
+    name: 'Discord',
+    logo: DiscordLogo,
+    url: 'https://discord.com/users/sameerjadhav2398',
   },
 ];
 
@@ -106,7 +112,9 @@ export const SocialHandles: React.FC = () => {
                   <span className="text-xl font-semibold text-gray-800 dark:text-white mb-1">
                     {platform.name}
                   </span>
-                  <span className="text-gray-500 dark:text-gray-400 text-sm">Visit my {platform.name} profile</span>
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                    {platform.name === 'Discord' ? 'Connect with me on Discord' : `Visit my ${platform.name} profile`}
+                  </span>
                 </a>
               ))}
             </div>
