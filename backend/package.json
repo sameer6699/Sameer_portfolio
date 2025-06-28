@@ -7,7 +7,9 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "postinstall": "npm run build",
-    "test:ollama": "node test-ollama.js"
+    "test:ollama": "node test-ollama.js",
+    "test:mongodb": "node test-mongodb.js",
+    "test:ngrok": "node test-ngrok-monitoring.js"
   },
   "dependencies": {
     "axios": "^1.10.0",
