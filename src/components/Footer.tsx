@@ -1,31 +1,32 @@
-import * as React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, ArrowUp, X, Send, ChevronUp, ChevronDown } from 'lucide-react';
 import MetaAvatar from './assets/meta-Avtar-profile.png';
 import { Counter } from './Counter';
+import { Message } from '../types';
 
 export const Footer: React.FC = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-  const [isChatOpen, setIsChatOpen] = React.useState(false);
-  const [chatInput, setChatInput] = React.useState("");
-  const [messages, setMessages] = React.useState([
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>([
     { sender: "sam", text: "Hi! I'm Sam AI. How can I help you today?" },
     { sender: "sam", text: "In which language would you like to talk with me?" },
   ]);
-  const [isTyping, setIsTyping] = React.useState(false);
-  const [selectedLanguage, setSelectedLanguage] = React.useState<string | null>(null);
-  const [showLanguageButtons, setShowLanguageButtons] = React.useState(true);
-  const messagesEndRef = React.useRef<HTMLDivElement>(null);
-  const messagesContainerRef = React.useRef<HTMLDivElement>(null);
-  const chatInputRef = React.useRef<HTMLInputElement>(null);
-  const [visitorCount, setVisitorCount] = React.useState(0);
-  const [meetingCount, setMeetingCount] = React.useState(0);
-  const [getInTouchCount, setGetInTouchCount] = React.useState(0);
-  const [isPrivacyOpen, setIsPrivacyOpen] = React.useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [showLanguageButtons, setShowLanguageButtons] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const chatInputRef = useRef<HTMLInputElement>(null);
+  const [visitorCount, setVisitorCount] = useState(0);
+  const [meetingCount, setMeetingCount] = useState(0);
+  const [getInTouchCount, setGetInTouchCount] = useState(0);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Visitor Count
     const countKey = 'portfolioVisitorCount';
     let count = localStorage.getItem(countKey);
@@ -52,7 +53,7 @@ export const Footer: React.FC = () => {
     setGetInTouchCount(Number(getInTouch));
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isChatOpen) {
       const handleEsc = (e: KeyboardEvent) => {
         if (e.key === 'Escape') setIsChatOpen(false);
@@ -62,7 +63,7 @@ export const Footer: React.FC = () => {
     }
   }, [isChatOpen]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isChatOpen && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -119,7 +120,8 @@ export const Footer: React.FC = () => {
           sessionId: `user-${Date.now()}`, // Simple session ID
           context: {
             systemMessage: `You are Sam AI, Sameer's friendly portfolio assistant. The user has selected to chat in ${selectedLanguage}. Please respond in ${selectedLanguage}. Keep responses concise and helpful. For greetings, respond briefly. For questions about Sameer, provide relevant info about his skills, projects, and experience.`,
-            maxHistoryLength: 10
+            maxHistoryLength: 10,
+            language: selectedLanguage
           }
         }),
       });
@@ -129,9 +131,27 @@ export const Footer: React.FC = () => {
       }
 
       const data = await response.json();
-      const aiMessage = { sender: "sam", text: data.response };
-
-      setMessages((msgs) => [...msgs, aiMessage]);
+      
+      // Handle fallback responses
+      if (data.isFallback) {
+        // Add a subtle indicator that we're using fallback mode
+        const fallbackIndicator = { 
+          sender: "sam", 
+          text: data.response,
+          isFallback: true,
+          fallbackMessage: data.fallbackMessage || "Using intelligent fallback responses while AI service is unavailable."
+        };
+        setMessages((msgs) => [...msgs, fallbackIndicator]);
+        
+        // Show a temporary notification about fallback mode (optional)
+        if (import.meta.env.MODE === 'development') {
+          console.log('Using fallback mode:', data.fallbackMessage);
+        }
+      } else {
+        // Normal AI response
+        const aiMessage = { sender: "sam", text: data.response };
+        setMessages((msgs) => [...msgs, aiMessage]);
+      }
 
     } catch (error) {
       // Only log error in development mode
@@ -139,7 +159,15 @@ export const Footer: React.FC = () => {
         // eslint-disable-next-line no-console
         console.error("Error calling AI API:", error);
       }
-      const errorMessage = { sender: "sam", text: "Sorry, I'm having trouble connecting to my brain right now. Please try again later!" };
+      
+      // Use fallback response even for network errors
+      const fallbackResponse = "I'm currently experiencing technical difficulties, but I can still help you learn about Sameer! He's a skilled software developer with expertise in React, Node.js, TypeScript, and cloud technologies. Feel free to ask about his skills, projects, or experience!";
+      const errorMessage = { 
+        sender: "sam", 
+        text: fallbackResponse,
+        isFallback: true,
+        fallbackMessage: "Network error - using fallback response"
+      };
       setMessages((msgs) => [...msgs, errorMessage]);
     } finally {
       setIsTyping(false);
@@ -369,10 +397,19 @@ export const Footer: React.FC = () => {
                       )}
                       <div className={`relative px-4 py-2 rounded-2xl max-w-[80%] break-words text-sm shadow-lg ${msg.sender === 'user' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-br-none' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-none'}`}
                         >
-                        {msg.text}
-                        {/* Bubble tail */}
-                        <span className={`absolute bottom-0 ${msg.sender === 'user' ? 'right-0 translate-x-1/2' : 'left-0 -translate-x-1/2'} w-3 h-3 bg-inherit rounded-full z-0`}></span>
-                      </div>
+                          {msg.text}
+                          {/* Fallback indicator */}
+                          {msg.isFallback && (
+                            <div className="mt-1 pt-1 border-t border-gray-300/30 dark:border-gray-600/30">
+                              <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                                <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                                Intelligent fallback response
+                              </span>
+                            </div>
+                          )}
+                          {/* Bubble tail */}
+                          <span className={`absolute bottom-0 ${msg.sender === 'user' ? 'right-0 translate-x-1/2' : 'left-0 -translate-x-1/2'} w-3 h-3 bg-inherit rounded-full z-0`}></span>
+                        </div>
                     </motion.div>
                   ))}
                   

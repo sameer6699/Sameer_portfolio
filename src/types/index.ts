@@ -40,3 +40,10 @@ export interface AppointmentForm {
   time: string;
   type: 'consultation' | 'quick-chat' | 'project-discussion';
 }
+
+export interface Message {
+  sender: 'user' | 'sam';
+  text: string;
+  isFallback?: boolean;
+  fallbackMessage?: string;
+}

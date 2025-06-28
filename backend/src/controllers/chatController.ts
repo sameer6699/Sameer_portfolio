@@ -21,14 +21,15 @@ export const handleChat = async (req: Request, res: Response) => {
       sessionContext = {
         conversationHistory: [],
         systemMessage: context?.systemMessage,
-        maxHistoryLength: context?.maxHistoryLength || 10
+        maxHistoryLength: context?.maxHistoryLength || 10,
+        language: context?.language || 'english'
       };
       if (sessionId) {
         sessionStore.set(sessionId, sessionContext);
       }
     }
     
-    // Call Ollama with context
+    // Call Ollama with context (now includes fallback handling)
     const result = await callOllama(messages, sessionContext);
     
     // Update session with new context
@@ -36,8 +37,8 @@ export const handleChat = async (req: Request, res: Response) => {
       sessionStore.set(sessionId, result.updatedContext);
     }
     
-    // Save chat to MongoDB
-    if (sessionId && messages.length > 0) {
+    // Save chat to MongoDB (only if not in fallback mode to avoid spam)
+    if (sessionId && messages.length > 0 && !result.isFallback) {
       const lastUserMessage = messages[messages.length - 1];
       if (lastUserMessage.role === 'user') {
         try {
@@ -54,15 +55,48 @@ export const handleChat = async (req: Request, res: Response) => {
       }
     }
     
-    res.status(200).json({ 
+    // Add fallback indicator to response if using fallback mode
+    const responseData: any = {
       response: result.response,
       sessionId: sessionId || null,
       context: result.updatedContext
-    });
+    };
+    
+    if (result.isFallback) {
+      responseData.isFallback = true;
+      responseData.fallbackMessage = "Using intelligent fallback responses while AI service is unavailable.";
+    }
+    
+    res.status(200).json(responseData);
+    
   } catch (error: any) {
-    // Ollama-specific error logging
-    console.error('[Ollama Controller Error]', error.message || error);
-    res.status(500).json({ error: error.message || 'Failed to get response from Ollama.' });
+    console.error('[Chat Controller Error]', error.message || error);
+    
+    // Even if there's an error in the controller, try to provide a fallback response
+    try {
+      const { messages, sessionId, context } = req.body;
+      const lastUserMessage = messages?.[messages.length - 1];
+      const userMessage = lastUserMessage?.content || 'Hello';
+      const language = context?.language || 'english';
+      
+      // Import FallbackService here to avoid circular dependencies
+      const { FallbackService } = await import('../services/fallbackService');
+      const fallbackResponse = FallbackService.getErrorFallbackResponse('default', language);
+      
+      res.status(200).json({
+        response: fallbackResponse,
+        sessionId: sessionId || null,
+        isFallback: true,
+        fallbackMessage: "Emergency fallback response due to system error.",
+        error: "System temporarily unavailable, using fallback mode."
+      });
+    } catch (fallbackError) {
+      // If even fallback fails, return a basic error response
+      res.status(500).json({ 
+        error: 'Service temporarily unavailable. Please try again later.',
+        fallbackResponse: "I'm Sam AI, Sameer's portfolio assistant. I'm currently experiencing technical difficulties, but I can tell you that Sameer is a skilled software developer with expertise in React, Node.js, and cloud technologies. Feel free to explore his portfolio for more information!"
+      });
+    }
   }
 };
 
