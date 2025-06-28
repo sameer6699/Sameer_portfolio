@@ -1,38 +1,31 @@
-import axios from 'axios';
+import { ollamaService } from './ollamaService';
 
-export const callOpenAI = async (messages: { role: string; content: string }[]) => {
-  const API_URL = 'https://api.openai.com/v1/chat/completions';
-  const API_KEY = process.env.OPENAI_API_KEY;
-  const MODEL = process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
-
-  if (!API_KEY) {
-    throw new Error('OpenAI API KEY not set in environment variables.');
-  }
-
-  const payload = {
-    model: MODEL,
-    messages,
-  };
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${API_KEY}`,
-  };
-
+export const callOllama = async (
+  messages: { role: string; content: string }[],
+  context?: any
+) => {
   try {
-    const response = await axios.post(API_URL, payload, { headers });
-    return response.data.choices?.[0]?.message?.content || response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      // OpenAI API error details
-      const apiError = error.response?.data?.error;
-      const message = apiError?.message || error.message;
-      const type = apiError?.type || 'OpenAI API Error';
-      console.error(`[OpenAI API Error] Type: ${type}, Message: ${message}`);
-      throw new Error(`OpenAI API Error: ${message}`);
-    } else {
-      console.error('[OpenAI Error]', error);
-      throw new Error('Unexpected error occurred while communicating with OpenAI API.');
+    // Check if Ollama is running
+    const isHealthy = await ollamaService.healthCheck();
+    if (!isHealthy) {
+      throw new Error('Ollama is not running. Please start Ollama on localhost:11434');
     }
+
+    // Get the model from environment or use default
+    const model = process.env.OLLAMA_MODEL || 'llama2';
+    
+    // Generate response using Ollama with context
+    const result = await ollamaService.generateChatCompletion(messages, model, undefined, context);
+    return result;
+  } catch (error: any) {
+    console.error('[Ollama Service Error]', error.message || error);
+    throw new Error(error.message || 'Failed to get response from Ollama.');
   }
+};
+
+// Keep the old function for backward compatibility but mark it as deprecated
+export const callOpenAI = async (messages: { role: string; content: string }[]) => {
+  console.warn('[DEPRECATED] callOpenAI is deprecated. Use callOllama instead.');
+  const result = await callOllama(messages);
+  return result.response; // Return just the response for backward compatibility
 }; 
