@@ -46,4 +46,6 @@ export interface Message {
   text: string;
   isFallback?: boolean;
   fallbackMessage?: string;
+  isAbuse?: boolean;
+  abuseMessage?: string;
 }

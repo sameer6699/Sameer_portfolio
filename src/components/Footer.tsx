@@ -132,8 +132,18 @@ export const Footer: React.FC = () => {
 
       const data = await response.json();
       
+      // Handle abuse responses
+      if (data.updatedContext?.abuseDetected) {
+        const abuseMessage = { 
+          sender: "sam", 
+          text: data.response,
+          isAbuse: true,
+          abuseMessage: "Abuse detected - responding in kind"
+        };
+        setMessages((msgs) => [...msgs, abuseMessage]);
+      }
       // Handle fallback responses
-      if (data.isFallback) {
+      else if (data.isFallback) {
         // Add a subtle indicator that we're using fallback mode
         const fallbackIndicator = { 
           sender: "sam", 
@@ -395,9 +405,18 @@ export const Footer: React.FC = () => {
                           <img src={MetaAvatar} alt="Sam AI" className="w-6 h-6 rounded-full object-cover" />
                         </span>
                       )}
-                      <div className={`relative px-4 py-2 rounded-2xl max-w-[80%] break-words text-sm shadow-lg ${msg.sender === 'user' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-br-none' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-none'}`}
+                      <div className={`relative px-4 py-2 rounded-2xl max-w-[80%] break-words text-sm shadow-lg ${msg.sender === 'user' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-br-none' : msg.isAbuse ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-bl-none' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-none'}`}
                         >
                           {msg.text}
+                          {/* Abuse indicator */}
+                          {msg.isAbuse && (
+                            <div className="mt-1 pt-1 border-t border-red-300/30 dark:border-red-600/30">
+                              <span className="text-xs text-red-200 dark:text-red-300 flex items-center gap-1">
+                                <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
+                                Abuse response
+                              </span>
+                            </div>
+                          )}
                           {/* Fallback indicator */}
                           {msg.isFallback && (
                             <div className="mt-1 pt-1 border-t border-gray-300/30 dark:border-gray-600/30">

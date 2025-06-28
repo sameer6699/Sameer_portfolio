@@ -1,3 +1,5 @@
+import { AbuseDetectionService } from './abuseDetectionService';
+
 interface FallbackResponse {
   response: string;
   context: string;
@@ -146,6 +148,13 @@ export class FallbackService {
     conversationHistory: any[] = [], 
     language: string = 'english'
   ): string {
+    // Check for abusive language first
+    const abuseCheck = AbuseDetectionService.handleAbusiveMessage(userMessage, language);
+    if (abuseCheck.shouldRespond && abuseCheck.response) {
+      console.log('[Fallback Service] Abusive language detected in fallback mode');
+      return abuseCheck.response;
+    }
+
     const message = userMessage.toLowerCase().trim();
     
     // Check if this is a follow-up question based on conversation history

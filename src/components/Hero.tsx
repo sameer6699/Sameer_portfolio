@@ -15,6 +15,28 @@ interface SymbolBase {
   rotate: number;
 }
 
+interface DotBase {
+  top: number;
+  left: number;
+  size: number;
+  xMovement: number;
+  yMovement: number;
+  duration: number;
+  delay: number;
+  opacity: number;
+}
+
+interface FastDotBase {
+  top: number;
+  left: number;
+  size: number;
+  xMovement: number;
+  yMovement: number;
+  duration: number;
+  delay: number;
+  opacity: number;
+}
+
 interface HeroProps {
   onBookAppointment: () => void;
 }
@@ -31,7 +53,27 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
     'Tech Enthusiast',
     'Problem Solver',
   ];
-  const techSymbols = ['<>', '{}', '/>', '=>', '()', '[]', 'const', 'let', 'var', 'React', 'Node', 'SQL', 'py', 'git', 'λ', 'ƒ', 'Σ', '∫', '∞', 'Φ', 'γ', 'θ', 'α', 'β'];
+  const techSymbols = [
+    '<>', '{}', '/>', '=>', '()', '[]', 'const', 'let', 'var', 'React', 'Node', 'SQL', 'py', 'git', 'λ', 'ƒ', 'Σ', '∫', '∞', 'Φ', 'γ', 'θ', 'α', 'β',
+    '//', '/*', '*/', '&&', '||', '==', '===', '!=', '!==', '+=', '-=', '*=', '/=', '%=', '++', '--', '<<', '>>', '>>>', '&', '|', '^', '~',
+    'async', 'await', 'promise', 'then', 'catch', 'finally', 'try', 'throw', 'class', 'extends', 'super', 'static', 'public', 'private', 'protected',
+    'interface', 'type', 'enum', 'namespace', 'module', 'import', 'export', 'default', 'from', 'as', 'in', 'of', 'for', 'while', 'do', 'switch', 'case',
+    'break', 'continue', 'return', 'yield', 'function', 'arrow', 'callback', 'closure', 'scope', 'hoisting', 'prototype', 'inheritance', 'polymorphism',
+    'encapsulation', 'abstraction', 'mutation', 'immutable', 'pure', 'side', 'effect', 'curry', 'compose', 'pipe', 'map', 'filter', 'reduce', 'find',
+    'some', 'every', 'includes', 'indexOf', 'slice', 'splice', 'push', 'pop', 'shift', 'unshift', 'reverse', 'sort', 'join', 'split', 'trim',
+    'toUpperCase', 'toLowerCase', 'parseInt', 'parseFloat', 'toString', 'valueOf', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable',
+    'JSON', 'XML', 'HTML', 'CSS', 'SCSS', 'SASS', 'LESS', 'BEM', 'OOCSS', 'SMACSS', 'ITCSS', 'CUBE', 'Atomic', 'Utility', 'Component', 'Module',
+    'Vue', 'Angular', 'Svelte', 'Next', 'Nuxt', 'Gatsby', 'Astro', 'Remix', 'SvelteKit', 'Solid', 'Preact', 'Alpine', 'Lit', 'Stencil', 'Web',
+    'TypeScript', 'JavaScript', 'CoffeeScript', 'Dart', 'Elm', 'Reason', 'ClojureScript', 'PureScript', 'Fable', 'BuckleScript', 'ReScript',
+    'Webpack', 'Vite', 'Rollup', 'Parcel', 'Esbuild', 'SWC', 'Babel', 'PostCSS', 'Autoprefixer', 'Tailwind', 'Bootstrap', 'Material', 'Ant',
+    'Chakra', 'Mantine', 'Radix', 'Headless', 'Framer', 'Lottie', 'Three', 'D3', 'Chart', 'Canvas', 'SVG', 'WebGL', 'WebRTC', 'WebSocket',
+    'REST', 'GraphQL', 'gRPC', 'tRPC', 'OpenAPI', 'Swagger', 'Postman', 'Insomnia', 'Thunder', 'Client', 'Server', 'API', 'Endpoint', 'Route',
+    'Express', 'Koa', 'Fastify', 'Hapi', 'Nest', 'Adonis', 'Strapi', 'Keystone', 'Directus', 'Supabase', 'Firebase', 'AWS', 'Azure', 'GCP',
+    'Docker', 'Kubernetes', 'Helm', 'Terraform', 'Ansible', 'Chef', 'Puppet', 'Jenkins', 'GitLab', 'GitHub', 'Bitbucket', 'Circle', 'Travis',
+    'MongoDB', 'PostgreSQL', 'MySQL', 'SQLite', 'Redis', 'Elasticsearch', 'InfluxDB', 'Cassandra', 'DynamoDB', 'CosmosDB', 'Neo4j', 'ArangoDB',
+    'Jest', 'Vitest', 'Cypress', 'Playwright', 'Selenium', 'Testing', 'Unit', 'Integration', 'E2E', 'TDD', 'BDD', 'DDD', 'SOLID', 'DRY', 'KISS',
+    'YAGNI', 'MVP', 'POC', 'SPA', 'MPA', 'SSR', 'SSG', 'ISR', 'CSR', 'JAMstack', 'MERN', 'MEAN', 'PERN', 'T3', 'Full', 'Stack', 'Frontend', 'Backend'
+  ];
   const [cursor, setCursor] = useState<{ x: number | null; y: number | null } | null>(null);
   const [shiftActivated, setShiftActivated] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -59,7 +101,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
 
   // Store random base positions for each symbol so they don't change on every render
   const symbolBases = useRef<SymbolBase[]>(
-    Array.from({ length: window.innerWidth < 768 ? 40 : 140 }, () => ({
+    Array.from({ length: window.innerWidth < 768 ? 120 : 300 }, () => ({
       top: Math.random() * 100,
       left: Math.random() * 100,
       fontSize: Math.random() * 1.5 + 0.75,
@@ -71,12 +113,39 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
     }))
   );
 
+  // Store random base positions for animated dots
+  const dotBases = useRef<DotBase[]>(
+    Array.from({ length: window.innerWidth < 768 ? 25 : 50 }, () => ({
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      size: Math.random() * 4 + 2, // 2-6px
+      xMovement: (Math.random() - 0.5) * 150,
+      yMovement: (Math.random() - 0.5) * 150,
+      duration: Math.random() * 25 + 20,
+      delay: Math.random() * 15,
+      opacity: Math.random() * 0.2 + 0.05, // 0.05-0.25 opacity (reduced)
+    }))
+  );
+
+  // Store random base positions for fast-moving dots
+  const fastDotBases = useRef<FastDotBase[]>(
+    Array.from({ length: window.innerWidth < 768 ? 40 : 80 }, () => ({
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      size: Math.random() * 3 + 1, // 1-4px (smaller)
+      xMovement: (Math.random() - 0.5) * 300, // Larger movement range
+      yMovement: (Math.random() - 0.5) * 300, // Larger movement range
+      duration: Math.random() * 8 + 4, // 4-12 seconds (much faster)
+      delay: Math.random() * 5, // Shorter delay
+      opacity: Math.random() * 0.15 + 0.05, // 0.05-0.2 opacity
+    }))
+  );
+
   return (
     <section
       ref={sectionRef}
       className="min-h-screen relative flex items-center justify-center overflow-hidden bg-white dark:bg-gray-950"
       onMouseMove={e => {
-        if (!shiftActivated) return;
         if (sectionRef.current) {
           const rect = sectionRef.current.getBoundingClientRect();
           setCursor({
@@ -86,8 +155,67 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
         }
       }}
       onMouseLeave={() => setCursor({ x: null, y: null })}
-      style={{ cursor: shiftActivated ? 'pointer' : 'default' }}
     >
+      {/* Fast Moving Dots Background */}
+      <div className="absolute inset-0 -z-20 overflow-hidden pointer-events-none">
+        {fastDotBases.current.map((base, i) => (
+          <motion.div
+            key={`fast-dot-${i}`}
+            className="absolute rounded-full bg-blue-400/20 dark:bg-cyan-400/15"
+            style={{
+              top: `${base.top}%`,
+              left: `${base.left}%`,
+              width: `${base.size}px`,
+              height: `${base.size}px`,
+              opacity: base.opacity,
+            }}
+            animate={{
+              x: [0, base.xMovement, 0],
+              y: [0, base.yMovement, 0],
+              scale: [1, 1.8, 1],
+              opacity: [base.opacity, base.opacity * 2, base.opacity],
+            }}
+            transition={{
+              duration: base.duration,
+              delay: base.delay,
+              repeat: Infinity,
+              repeatType: 'mirror',
+              ease: 'easeInOut',
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Animated Dots Background */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        {dotBases.current.map((base, i) => (
+          <motion.div
+            key={`dot-${i}`}
+            className="absolute rounded-full bg-purple-400/30 dark:bg-green-400/20"
+            style={{
+              top: `${base.top}%`,
+              left: `${base.left}%`,
+              width: `${base.size}px`,
+              height: `${base.size}px`,
+              opacity: base.opacity,
+            }}
+            animate={{
+              x: [0, base.xMovement, 0],
+              y: [0, base.yMovement, 0],
+              scale: [1, 1.5, 1],
+              opacity: [base.opacity, base.opacity * 1.5, base.opacity],
+            }}
+            transition={{
+              duration: base.duration,
+              delay: base.delay,
+              repeat: Infinity,
+              repeatType: 'mirror',
+              ease: 'easeInOut',
+            }}
+          />
+        ))}
+      </div>
+
       {/* Tech-themed Animated Background */}
       <div className="absolute inset-0 -z-0 overflow-hidden pointer-events-none">
         {symbolBases.current.map((base, i) => {
@@ -100,8 +228,9 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
           }
           const symbolX = (base.left / 100) * rect.width;
           const symbolY = (base.top / 100) * rect.height;
+          
+          // Make symbols run away from cursor (invert the direction)
           if (
-            shiftActivated &&
             cursor &&
             rect.width &&
             rect.height &&
@@ -110,15 +239,25 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
           ) {
             const dx = cursor.x - symbolX;
             const dy = cursor.y - symbolY;
-            // Move 20% toward the cursor for a more visible effect
-            cursorOffset = { x: dx * 0.2, y: dy * 0.2 };
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const maxDistance = 200; // Maximum distance for the effect
+            
+            if (distance < maxDistance) {
+              // Calculate how much to move away based on proximity
+              const escapeStrength = (maxDistance - distance) / maxDistance;
+              // Move away from cursor (negative direction)
+              cursorOffset = { 
+                x: -dx * escapeStrength * 0.8, 
+                y: -dy * escapeStrength * 0.8 
+              };
+            }
           }
 
           // Use Framer Motion's useMotionValue and useSpring for smooth animation
           const x = useMotionValue(0);
           const y = useMotionValue(0);
-          const springX = useSpring(x, { stiffness: 80, damping: 18 });
-          const springY = useSpring(y, { stiffness: 80, damping: 18 });
+          const springX = useSpring(x, { stiffness: 120, damping: 20 });
+          const springY = useSpring(y, { stiffness: 120, damping: 20 });
 
           // Z axis simulation: animate scale between 0.8 and 1.2
           const scale = useSpring(1 + Math.sin(base.delay) * 0.2, { stiffness: 60, damping: 16 });
@@ -130,7 +269,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
           return (
             <motion.div
               key={i}
-              className="absolute font-mono text-purple-400/40 dark:text-green-400/25 select-none"
+              className="absolute font-mono text-purple-400/20 dark:text-green-400/15 select-none"
               style={{
                 top: `${base.top}%`,
                 left: `${base.left}%`,
@@ -181,7 +320,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
           className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 sm:mb-6 text-gray-800 dark:text-white"
         >
           Hi, I'm{' '}
-          <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent font-bold">
             Sameer Jadhav
           </span>
         </motion.h1>
@@ -190,7 +329,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl sm:text-2xl md:text-3xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 h-12"
+          className="text-xl sm:text-2xl md:text-3xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 h-12 font-bold"
         >
           <AnimatedText texts={roles} />
         </motion.div>
@@ -199,7 +338,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-md sm:text-lg text-gray-600 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto"
+          className="text-md sm:text-lg text-gray-600 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto font-bold"
         >
           I create beautiful, functional websites and applications that solve real-world problems.
           Let's build something amazing together.

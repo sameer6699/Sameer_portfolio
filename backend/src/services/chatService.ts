@@ -1,5 +1,6 @@
 import { ollamaService } from './ollamaService';
 import { FallbackService } from './fallbackService';
+import { AbuseDetectionService } from './abuseDetectionService';
 import axios from 'axios';
 import { Chat, IChat } from '../models/chatModel';
 
@@ -15,6 +16,34 @@ export const callOllama = async (
   context?: any
 ): Promise<ChatResponse> => {
   try {
+    // Get the last user message for abuse detection
+    const lastUserMessage = messages[messages.length - 1];
+    const userMessage = lastUserMessage?.content || '';
+    const language = context?.language || 'english';
+    
+    // Check for abusive language first
+    const abuseCheck = AbuseDetectionService.handleAbusiveMessage(userMessage, language);
+    if (abuseCheck.shouldRespond && abuseCheck.response) {
+      console.log('[Chat Service] Abusive language detected, responding with abuse response');
+      
+      // Create response in the same format as normal response
+      const updatedContext = {
+        ...context,
+        conversationHistory: [
+          ...(context?.conversationHistory || []),
+          { role: 'user', content: userMessage },
+          { role: 'assistant', content: abuseCheck.response }
+        ],
+        abuseDetected: true // Flag to indicate this was an abuse response
+      };
+      
+      return {
+        response: abuseCheck.response,
+        updatedContext,
+        isFallback: false
+      };
+    }
+
     // Check if Ollama is running
     const isHealthy = await ollamaService.healthCheck();
     if (!isHealthy) {
