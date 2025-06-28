@@ -78,12 +78,24 @@ export const Footer: React.FC = () => {
         role: msg.sender === 'sam' ? 'assistant' : 'user',
         content: msg.text
       }));
-      const response = await fetch("/api/chat", {
+      
+      // Use environment variable for backend URL, fallback to relative path for development
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
+      const apiUrl = backendUrl ? `${backendUrl}/api/chat` : '/api/chat';
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ messages: formattedMessages }),
+        body: JSON.stringify({ 
+          messages: formattedMessages,
+          sessionId: `user-${Date.now()}`, // Simple session ID
+          context: {
+            systemMessage: "You are Sam AI, Sameer's friendly portfolio assistant. Keep responses concise and helpful. For greetings, respond briefly. For questions about Sameer, provide relevant info about his skills, projects, and experience.",
+            maxHistoryLength: 10
+          }
+        }),
       });
 
       if (!response.ok) {
@@ -99,9 +111,9 @@ export const Footer: React.FC = () => {
       // Only log error in development mode
       if (import.meta.env.MODE === 'development') {
         // eslint-disable-next-line no-console
-        console.error("Error calling NVIDIA NIM API:", error);
+        console.error("Error calling AI API:", error);
       }
-      const errorMessage = { sender: "sam", text: "Sorry, I'm having trouble connecting to my brain right now." };
+      const errorMessage = { sender: "sam", text: "Sorry, I'm having trouble connecting to my brain right now. Please try again later!" };
       setMessages((msgs) => [...msgs, errorMessage]);
     } finally {
       setIsTyping(false);

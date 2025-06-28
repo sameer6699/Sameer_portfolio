@@ -1,0 +1,8 @@
+# Frontend Environment Variables
+# Create a .env file in the root directory with these variables
+
+# Backend URL for production (replace with your deployed backend URL)
+VITE_BACKEND_URL=https://your-backend-url.railway.app
+
+# Development will use the proxy in vite.config.ts (localhost:5000)
+# No VITE_BACKEND_URL needed for development 
