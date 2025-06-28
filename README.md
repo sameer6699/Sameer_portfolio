@@ -36,6 +36,24 @@ This project is built with a modern frontend stack:
 *   **Component-Based:** Built with reusable React components.
 *   **Contact Form:** Easy for visitors to send a message.
 *   **Project Showcase:** A dedicated section to display your work.
+*   **SAM AI Chat:** Interactive AI assistant with multilingual support (English, Hindi, Marathi).
+
+## SAM AI Chat Feature
+
+The portfolio includes an intelligent AI assistant called SAM AI that can help visitors learn about Sameer's work and experience. Key features:
+
+*   **Multilingual Support:** Chat in English, Hindi, or Marathi
+*   **Portfolio Knowledge:** Ask about Sameer's skills, projects, and achievements
+*   **Technical Discussions:** Get information about technologies and development topics
+*   **Friendly Interface:** Modern chat UI with smooth animations
+*   **Privacy-First:** No data storage, conversations are processed in real-time
+
+### How to Use
+
+1. Click the "Chat with Sam AI" button in the bottom-right corner
+2. Accept the privacy policy
+3. Select your preferred language (English, Hindi, or Marathi)
+4. Start chatting with SAM AI about Sameer's portfolio and experience
 
 ## Getting Started
 

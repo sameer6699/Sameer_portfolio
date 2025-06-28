@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, ArrowUp, X, Send } from 'lucide-react';
+import { Heart, ArrowUp, X, Send, ChevronUp, ChevronDown } from 'lucide-react';
 import MetaAvatar from './assets/meta-Avtar-profile.png';
 import { Counter } from './Counter';
 
@@ -12,9 +12,14 @@ export const Footer: React.FC = () => {
   const [chatInput, setChatInput] = React.useState("");
   const [messages, setMessages] = React.useState([
     { sender: "sam", text: "Hi! I'm Sam AI. How can I help you today?" },
+    { sender: "sam", text: "In which language would you like to talk with me?" },
   ]);
   const [isTyping, setIsTyping] = React.useState(false);
+  const [selectedLanguage, setSelectedLanguage] = React.useState<string | null>(null);
+  const [showLanguageButtons, setShowLanguageButtons] = React.useState(true);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const messagesContainerRef = React.useRef<HTMLDivElement>(null);
+  const chatInputRef = React.useRef<HTMLInputElement>(null);
   const [visitorCount, setVisitorCount] = React.useState(0);
   const [meetingCount, setMeetingCount] = React.useState(0);
   const [getInTouchCount, setGetInTouchCount] = React.useState(0);
@@ -63,8 +68,29 @@ export const Footer: React.FC = () => {
     }
   }, [messages, isChatOpen]);
 
+  const handleLanguageSelection = (language: string) => {
+    setSelectedLanguage(language);
+    setShowLanguageButtons(false);
+    
+    const languageMessage = { sender: "user", text: language };
+    const aiResponse = { 
+      sender: "sam", 
+      text: `Great! I'll chat with you in ${language}. How can I help you today?` 
+    };
+    
+    setMessages(prev => [...prev, languageMessage, aiResponse]);
+    
+    // Focus on chat input after language selection with a longer delay to ensure DOM is updated
+    setTimeout(() => {
+      if (chatInputRef.current) {
+        chatInputRef.current.focus();
+        chatInputRef.current.select();
+      }
+    }, 200);
+  };
+
   const handleSend = async () => {
-    if (chatInput.trim() === "") return;
+    if (chatInput.trim() === "" || !selectedLanguage) return;
 
     const userMessage = { sender: "user", text: chatInput };
     const newMessages = [...messages, userMessage];
@@ -92,7 +118,7 @@ export const Footer: React.FC = () => {
           messages: formattedMessages,
           sessionId: `user-${Date.now()}`, // Simple session ID
           context: {
-            systemMessage: "You are Sam AI, Sameer's friendly portfolio assistant. Keep responses concise and helpful. For greetings, respond briefly. For questions about Sameer, provide relevant info about his skills, projects, and experience.",
+            systemMessage: `You are Sam AI, Sameer's friendly portfolio assistant. The user has selected to chat in ${selectedLanguage}. Please respond in ${selectedLanguage}. Keep responses concise and helpful. For greetings, respond briefly. For questions about Sameer, provide relevant info about his skills, projects, and experience.`,
             maxHistoryLength: 10
           }
         }),
@@ -128,8 +154,11 @@ export const Footer: React.FC = () => {
     setIsChatOpen(false);
     setMessages([
       { sender: "sam", text: "Hi! I'm Sam AI. How can I help you today?" },
+      { sender: "sam", text: "In which language would you like to talk with me?" },
     ]);
     setChatInput("");
+    setSelectedLanguage(null);
+    setShowLanguageButtons(true);
   };
 
   // Handler for Chat with Sam AI button
@@ -139,6 +168,10 @@ export const Footer: React.FC = () => {
     } else {
       setIsPrivacyOpen(true);
     }
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -300,6 +333,11 @@ export const Footer: React.FC = () => {
                     <img src={MetaAvatar} alt="Meta Avatar" className="w-7 h-7 rounded-full object-cover" />
                   </span>
                   Sam AI
+                  {selectedLanguage && (
+                    <span className="text-xs bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-2 py-1 rounded-full font-medium">
+                      {selectedLanguage}
+                    </span>
+                  )}
                 </h2>
                 <button
                   onClick={handleCloseChat}
@@ -311,7 +349,11 @@ export const Footer: React.FC = () => {
               </div>
               <div className="relative flex-1 flex flex-col overflow-hidden">
                 {/* Chat messages area */}
-                <div className="flex-1 overflow-y-auto bg-white/60 dark:bg-gray-800/60 p-4 custom-scrollbar" style={{ minHeight: 0 }}>
+                <div 
+                  ref={messagesContainerRef}
+                  className="flex-1 overflow-y-auto bg-white/60 dark:bg-gray-800/60 p-4 hide-scrollbar" 
+                  style={{ minHeight: 0 }}
+                >
                   {messages.map((msg, idx) => (
                     <motion.div
                       key={idx}
@@ -333,6 +375,48 @@ export const Footer: React.FC = () => {
                       </div>
                     </motion.div>
                   ))}
+                  
+                  {/* Language Selection Buttons */}
+                  {showLanguageButtons && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                      className="flex flex-wrap gap-2 mt-3"
+                    >
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleLanguageSelection('English');
+                        }}
+                        className="px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg font-medium hover:from-cyan-500 hover:to-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                      >
+                        English
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleLanguageSelection('Hindi');
+                        }}
+                        className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-medium hover:from-emerald-500 hover:to-green-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                      >
+                        Hindi
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleLanguageSelection('Marathi');
+                        }}
+                        className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium hover:from-pink-500 hover:to-purple-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                      >
+                        Marathi
+                      </button>
+                    </motion.div>
+                  )}
+                  
                   {isTyping && (
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -352,30 +436,39 @@ export const Footer: React.FC = () => {
                   )}
                   <div ref={messagesEndRef} />
                 </div>
+                
                 {/* Scroll to bottom button */}
                 <button
-                  onClick={() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={scrollToBottom}
                   className="absolute right-4 bottom-20 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full p-2 shadow-lg hover:scale-110 transition-all focus:outline-none focus:ring-2 focus:ring-blue-400"
                   aria-label="Scroll to latest message"
                   style={{ display: messages.length > 3 ? 'block' : 'none' }}
                 >
                   <ArrowUp className="w-5 h-5 rotate-180" />
                 </button>
+
                 {/* Chat input area */}
                 <div className="flex items-center gap-2 p-2 bg-white/80 dark:bg-gray-900/80 border-t border-gray-200/30 dark:border-gray-700/30 sticky bottom-0 z-10">
                   <input
                     type="text"
-                    className="flex-1 px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Type your message..."
+                    className={`chat-input flex-1 px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400 ${!selectedLanguage ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    placeholder={selectedLanguage ? "Type your message..." : "Please select a language first..."}
                     value={chatInput}
                     onChange={e => setChatInput(e.target.value)}
                     onKeyDown={handleInputKeyDown}
-                    autoFocus
+                    disabled={!selectedLanguage}
+                    autoFocus={selectedLanguage ? true : false}
                     aria-label="Type your message"
+                    ref={chatInputRef}
                   />
                   <button
                     onClick={handleSend}
-                    className="px-3 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-full font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all duration-200 flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    disabled={!selectedLanguage || chatInput.trim() === ""}
+                    className={`px-3 py-2 rounded-full font-semibold transition-all duration-200 flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                      selectedLanguage && chatInput.trim() !== "" 
+                        ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-cyan-600 hover:to-blue-600' 
+                        : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                    }`}
                     aria-label="Send message"
                   >
                     <Send className="w-5 h-5" />
