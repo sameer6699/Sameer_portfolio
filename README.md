@@ -2,7 +2,12 @@
 
 A cutting-edge, full-stack portfolio website featuring an intelligent AI chat assistant, modern animations, and responsive design. Built with React, TypeScript, and powered by local AI models.
 
-https://github.com/your-username/Sameer_portfolio/assets/your-user-id/Preview.mp4
+<div align="center">
+  <video width="100%" autoplay loop muted playsinline>
+    <source src="src/components/assets/Preview.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
 
 ![Portfolio Preview](https://img.shields.io/badge/Status-Live-brightgreen)
 ![React](https://img.shields.io/badge/React-18.3.1-blue)
