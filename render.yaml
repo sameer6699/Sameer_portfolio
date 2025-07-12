@@ -1,8 +1,9 @@
 services:
-  # Backend Service
+  # Backend API Service
   - type: web
     name: sameer-portfolio-backend
     env: node
+    plan: free
     buildCommand: cd backend && npm install && npm run build
     startCommand: cd backend && npm start
     envVars:
@@ -10,22 +11,26 @@ services:
         value: production
       - key: PORT
         value: 10000
-      - key: MONGO_URI
-        sync: false
       - key: GEMINI_API_KEY
         sync: false
-      - key: CORS_ORIGIN
+      - key: MONGO_URI
+        sync: false
+      - key: FRONTEND_URL
         value: https://sameer-portfolio-frontend.onrender.com
+      - key: ABUSE_DETECTION_ENABLED
+        value: true
+      - key: MAX_REQUESTS_PER_MINUTE
+        value: 60
+    healthCheckPath: /api/chat/health
 
-  # Frontend Service
+  # Frontend Static Site
   - type: web
     name: sameer-portfolio-frontend
     env: static
+    plan: free
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
     envVars:
-      - key: NODE_ENV
-        value: production
       - key: VITE_BACKEND_URL
         value: https://sameer-portfolio-backend.onrender.com
     routes:
