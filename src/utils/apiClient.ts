@@ -39,7 +39,7 @@ class APIClient {
     
     // Fallback to proxy for development
     if (import.meta.env.DEV) {
-      return '';
+      return window.location.origin; // Use current origin for proxy
     }
     
     // Production fallback

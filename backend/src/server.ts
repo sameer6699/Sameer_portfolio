@@ -3,7 +3,7 @@ dotenv.config();
 
 import app from './app';
 import { connectDB } from './db';
-import { checkOllamaOnStartup } from './utils/ollamaCheck';
+import { checkGeminiOnStartup } from './utils/geminiCheck';
 import { checkNgrokStatus } from './utils/ngrokCheck';
 import { startNgrokMonitoring, stopNgrokMonitoring } from './utils/ngrokMonitor';
 
@@ -11,8 +11,8 @@ const PORT = process.env.PORT || 5000;
 
 async function startServer() {
   try {
-    // Check Ollama connection on startup
-    await checkOllamaOnStartup();
+    // Check Gemini connection on startup
+    await checkGeminiOnStartup();
     
     // Connect to database
     await connectDB();

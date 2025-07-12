@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { callOllama, saveChatToDatabase, getChatHistory, clearChatHistory } from '../services/chatService';
+import { callGemini, saveChatToDatabase, getChatHistory, clearChatHistory } from '../services/chatService';
 
 // In-memory session storage (in production, use Redis or database)
 const sessionStore = new Map<string, any>();
@@ -29,8 +29,8 @@ export const handleChat = async (req: Request, res: Response) => {
       }
     }
     
-    // Call Ollama with context (now includes fallback handling)
-    const result = await callOllama(messages, sessionContext);
+    // Call Gemini with context (now includes fallback handling)
+    const result = await callGemini(messages, sessionContext);
     
     // Update session with new context
     if (sessionId) {

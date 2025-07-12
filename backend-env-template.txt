@@ -1,0 +1,26 @@
+# Backend Environment Variables Template
+# Copy this file to backend/.env and fill in your actual values
+
+# Google Gemini AI Configuration
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-1.5-flash
+
+# MongoDB Database Configuration
+MONGO_URI=mongodb://localhost:27017/Sameer_Portfolio
+# For production, use MongoDB Atlas:
+# MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/portfolio
+
+# Server Configuration
+PORT=5000
+NODE_ENV=development
+
+# CORS Configuration (for production)
+# Add your frontend URL when deployed
+FRONTEND_URL=http://localhost:5173
+
+# Optional: ngrok Configuration (if still using for local development)
+NGROK_AUTH_TOKEN=your_ngrok_auth_token_here
+
+# Optional: Abuse Detection (if implemented)
+ABUSE_DETECTION_ENABLED=true
+MAX_REQUESTS_PER_MINUTE=60 

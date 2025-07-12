@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global horizontal scrollbar hiding */
+html, body {
+  overflow-x: hidden;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
@@ -11,6 +16,21 @@
 .hide-scrollbar {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide all scrollbars globally */
+::-webkit-scrollbar {
+  display: none;  /* Hide all scrollbars */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: none;  /* Hide scrollbars in Firefox */
+}
+
+/* For IE and Edge */
+* {
+  -ms-overflow-style: none;  /* Hide scrollbars in IE and Edge */
 }
 
 @keyframes tech-marquee {

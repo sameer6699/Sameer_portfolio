@@ -1,8 +1,10 @@
-import { ollamaService } from './ollamaService';
+import { GeminiService } from './geminiService';
 import { FallbackService } from './fallbackService';
 import { AbuseDetectionService } from './abuseDetectionService';
-import axios from 'axios';
 import { Chat, IChat } from '../models/chatModel';
+
+// Initialize Gemini service
+const geminiService = new GeminiService();
 
 // Define the return type for chat responses
 interface ChatResponse {
@@ -11,7 +13,7 @@ interface ChatResponse {
   isFallback?: boolean;
 }
 
-export const callOllama = async (
+export const callGemini = async (
   messages: { role: string; content: string }[],
   context?: any
 ): Promise<ChatResponse> => {
@@ -44,28 +46,28 @@ export const callOllama = async (
       };
     }
 
-    // Check if Ollama is running
-    const isHealthy = await ollamaService.healthCheck();
+    // Check if Gemini is available
+    const isHealthy = await geminiService.healthCheck();
     if (!isHealthy) {
-      console.warn('[Chat Service] Ollama is not running, using fallback responses');
+      console.warn('[Chat Service] Gemini is not available, using fallback responses');
       return getFallbackResponse(messages, context);
     }
 
     // Get the model from environment or use default
-    const model = process.env.OLLAMA_MODEL || 'llama2';
+    const model = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
     
-    // Generate response using Ollama with context
-    const result = await ollamaService.generateChatCompletion(messages, model, undefined, context);
+    // Generate response using Gemini with context
+    const result = await geminiService.generateChatCompletion(messages, model, undefined, context);
     return {
       response: result.response,
       updatedContext: result.updatedContext,
       isFallback: false
     };
   } catch (error: any) {
-    console.error('[Ollama Service Error]', error.message || error);
+    console.error('[Gemini Service Error]', error.message || error);
     
     // Use fallback response instead of throwing error
-    console.warn('[Chat Service] Using fallback response due to Ollama error');
+    console.warn('[Chat Service] Using fallback response due to Gemini error');
     return getFallbackResponse(messages, context, error.message);
   }
 };
@@ -127,8 +129,8 @@ const getFallbackResponse = (
 
 // Keep the old function for backward compatibility but mark it as deprecated
 export const callOpenAI = async (messages: { role: string; content: string }[]) => {
-  console.warn('[DEPRECATED] callOpenAI is deprecated. Use callOllama instead.');
-  const result = await callOllama(messages);
+  console.warn('[DEPRECATED] callOpenAI is deprecated. Use callGemini instead.');
+  const result = await callGemini(messages);
   return result.response; // Return just the response for backward compatibility
 };
 

@@ -1,0 +1,13 @@
+# Frontend Environment Variables Template
+# Copy this file to .env (root directory) and fill in your actual values
+
+# Backend URL Configuration
+# For development (using proxy in vite.config.ts)
+# No VITE_BACKEND_URL needed - will use localhost:5000
+
+# For production (when deployed to Render)
+VITE_BACKEND_URL=https://your-backend-url.onrender.com
+
+# Optional: Analytics or other frontend services
+# VITE_ANALYTICS_ID=your_analytics_id
+# VITE_SENTRY_DSN=your_sentry_dsn 

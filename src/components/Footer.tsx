@@ -6,7 +6,7 @@ import { Counter } from './Counter';
 import { Message, FooterProps, ChatResponse } from '../types';
 import { secureGet, secureSet } from '../utils/secureStorage';
 import { useCSRF } from '../utils/csrf';
-import { apiPost } from '../utils/apiClient';
+import { simpleChatAPI } from '../utils/simpleApiClient';
 
 export const Footer: React.FC<FooterProps> = ({ className }) => {
   const scrollToTop = () => {
@@ -112,8 +112,8 @@ export const Footer: React.FC<FooterProps> = ({ className }) => {
         content: msg.text
       }));
       
-      // Use secure API client with CSRF protection
-      const response = await apiPost('/api/chat', { 
+      // Use simple API client
+      const data = await simpleChatAPI({ 
         messages: formattedMessages,
         sessionId: `user-${Date.now()}`, // Simple session ID
         context: {
@@ -122,8 +122,6 @@ export const Footer: React.FC<FooterProps> = ({ className }) => {
           language: selectedLanguage
         }
       });
-
-      const data = response.data as ChatResponse;
       
       // Handle abuse responses
       if (data.updatedContext?.abuseDetected) {
