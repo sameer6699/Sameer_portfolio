@@ -35,4 +35,4 @@ const chatSchema = new Schema<IChat>({
 // Create compound index for efficient querying
 chatSchema.index({ sessionId: 1, timestamp: -1 });
 
-export const Chat = mongoose.model<IChat>('Sam_AI', chatSchema); 
+export const Chat = mongoose.model<IChat>('sam_ai_chat', chatSchema); 

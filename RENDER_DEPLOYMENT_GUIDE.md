@@ -44,7 +44,7 @@ Deploy both frontend and backend together:
 ```env
 NODE_ENV=production
 PORT=10000
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/portfolio
+MONGO_URI=mongodb+srv://[username]:[password]@[cluster].mongodb.net/[database]
 GEMINI_API_KEY=your_gemini_api_key_here
 CORS_ORIGIN=https://sameer-portfolio-frontend.onrender.com
 ```

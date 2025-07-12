@@ -1,6 +1,8 @@
 import { GeminiService } from './geminiService';
 import { FallbackService } from './fallbackService';
 import { AbuseDetectionService } from './abuseDetectionService';
+import { rateLimitService } from './rateLimitService';
+import { cacheService } from './cacheService';
 import { Chat, IChat } from '../models/chatModel';
 
 // Initialize Gemini service
@@ -15,7 +17,8 @@ interface ChatResponse {
 
 export const callGemini = async (
   messages: { role: string; content: string }[],
-  context?: any
+  context?: any,
+  sessionId?: string
 ): Promise<ChatResponse> => {
   try {
     // Get the last user message for abuse detection
@@ -46,6 +49,36 @@ export const callGemini = async (
       };
     }
 
+    // Check cache first
+    const cachedResponse = cacheService.getCachedResponse(messages, context);
+    if (cachedResponse) {
+      console.log('[Chat Service] Using cached response');
+      const updatedContext = {
+        ...context,
+        conversationHistory: [
+          ...(context?.conversationHistory || []),
+          { role: 'user', content: userMessage },
+          { role: 'assistant', content: cachedResponse }
+        ],
+        cachedResponse: true
+      };
+      
+      return {
+        response: cachedResponse,
+        updatedContext,
+        isFallback: false
+      };
+    }
+
+    // Check rate limits if sessionId is provided
+    if (sessionId) {
+      const rateLimitCheck = rateLimitService.canMakeRequest(sessionId);
+      if (!rateLimitCheck.allowed) {
+        console.log(`[Chat Service] Rate limit exceeded for session ${sessionId}: ${rateLimitCheck.reason}`);
+        return getFallbackResponse(messages, context, 'rate_limit_exceeded', rateLimitCheck.waitTime);
+      }
+    }
+
     // Check if Gemini is available
     const isHealthy = await geminiService.healthCheck();
     if (!isHealthy) {
@@ -58,6 +91,10 @@ export const callGemini = async (
     
     // Generate response using Gemini with context
     const result = await geminiService.generateChatCompletion(messages, model, undefined, context);
+    
+    // Cache the successful response
+    cacheService.cacheResponse(messages, result.response, context);
+    
     return {
       response: result.response,
       updatedContext: result.updatedContext,
@@ -66,7 +103,18 @@ export const callGemini = async (
   } catch (error: any) {
     console.error('[Gemini Service Error]', error.message || error);
     
-    // Use fallback response instead of throwing error
+    // Handle rate limit errors specifically
+    if (error.message?.includes('429') || error.message?.includes('Too Many Requests')) {
+      if (sessionId) {
+        // Extract retry-after time if available
+        const retryAfter = error.response?.headers?.['retry-after'] || 60;
+        rateLimitService.handleRateLimitError(sessionId, parseInt(retryAfter));
+      }
+      console.warn('[Chat Service] Rate limit hit, using fallback response');
+      return getFallbackResponse(messages, context, 'rate_limit_exceeded');
+    }
+    
+    // Use fallback response for other errors
     console.warn('[Chat Service] Using fallback response due to Gemini error');
     return getFallbackResponse(messages, context, error.message);
   }
@@ -78,7 +126,8 @@ export const callGemini = async (
 const getFallbackResponse = (
   messages: { role: string; content: string }[],
   context?: any,
-  errorMessage?: string
+  errorMessage?: string,
+  waitTime?: number
 ): ChatResponse => {
   // Get the last user message
   const lastUserMessage = messages[messages.length - 1];
@@ -93,7 +142,9 @@ const getFallbackResponse = (
   // Determine error type for specific fallback responses
   let errorType = 'default';
   if (errorMessage) {
-    if (errorMessage.includes('timeout') || errorMessage.includes('time out')) {
+    if (errorMessage === 'rate_limit_exceeded') {
+      errorType = 'rate_limit';
+    } else if (errorMessage.includes('timeout') || errorMessage.includes('time out')) {
       errorType = 'timeout';
     } else if (errorMessage.includes('connection') || errorMessage.includes('ECONNREFUSED')) {
       errorType = 'connection';

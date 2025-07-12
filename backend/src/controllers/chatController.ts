@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { callGemini, saveChatToDatabase, getChatHistory, clearChatHistory } from '../services/chatService';
+import { rateLimitService } from '../services/rateLimitService';
 
 // In-memory session storage (in production, use Redis or database)
 const sessionStore = new Map<string, any>();
@@ -30,7 +31,7 @@ export const handleChat = async (req: Request, res: Response) => {
     }
     
     // Call Gemini with context (now includes fallback handling)
-    const result = await callGemini(messages, sessionContext);
+    const result = await callGemini(messages, sessionContext, sessionId);
     
     // Update session with new context
     if (sessionId) {
@@ -165,5 +166,22 @@ export const clearChatHistoryController = async (req: Request, res: Response) =>
   } catch (error: any) {
     console.error('[Clear Chat History Error]', error.message || error);
     res.status(500).json({ error: 'Failed to clear chat history' });
+  }
+};
+
+// New endpoint to get rate limit status
+export const getRateLimitStatus = async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.params;
+    
+    if (!sessionId) {
+      return res.status(400).json({ error: 'Session ID is required' });
+    }
+    
+    const status = rateLimitService.getRateLimitStatus(sessionId);
+    res.status(200).json(status);
+  } catch (error: any) {
+    console.error('[Get Rate Limit Status Error]', error.message || error);
+    res.status(500).json({ error: 'Failed to get rate limit status' });
   }
 }; 

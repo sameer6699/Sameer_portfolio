@@ -197,6 +197,7 @@ export class FallbackService {
    */
   static getErrorFallbackResponse(errorType: string, language: string = 'english'): string {
     const errorResponses: Record<string, string> = {
+      'rate_limit': "I'm getting a lot of requests right now, but I can still help you learn about Sameer! I'm using my backup responses to ensure you get the information you need. What would you like to know about his skills, projects, or experience?",
       'connection': "I'm having trouble connecting to my AI brain right now, but I can still help you learn about Sameer! What would you like to know about his skills, projects, or experience?",
       'timeout': "My response is taking longer than expected, but I'm here to help! Let me tell you about Sameer's background and expertise. What interests you most?",
       'service_unavailable': "My AI service is temporarily unavailable, but I can still provide information about Sameer's portfolio. Feel free to ask about his skills, projects, or how to get in touch!",
