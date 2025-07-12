@@ -1,4 +1,23 @@
 services:
+  # Backend Service
+  - type: web
+    name: sameer-portfolio-backend
+    env: node
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://sameer-portfolio-frontend.onrender.com
+
+  # Frontend Service
   - type: web
     name: sameer-portfolio-frontend
     env: static
@@ -7,6 +26,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: VITE_BACKEND_URL
+        value: https://sameer-portfolio-backend.onrender.com
     routes:
       - type: rewrite
         source: /*

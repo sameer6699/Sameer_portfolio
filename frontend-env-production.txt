@@ -1,8 +1,5 @@
-# Production Environment Variables
-# Create a .env.production file in the root directory with these variables
+# Frontend Production Environment Variables
+# Copy this to .env.production in the root directory
 
-# Backend URL for production (replace with your deployed backend URL)
-VITE_BACKEND_URL=https://your-backend-url.onrender.com
-
-# For now, you can use a local backend or comment this out
-# VITE_BACKEND_URL=http://localhost:5000 
+NODE_ENV=production
+VITE_BACKEND_URL=https://sameer-portfolio-backend.onrender.com 
