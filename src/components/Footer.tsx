@@ -3,9 +3,12 @@ import { motion } from 'framer-motion';
 import { Heart, ArrowUp, X, Send, ChevronUp, ChevronDown } from 'lucide-react';
 import MetaAvatar from './assets/meta-Avtar-profile.png';
 import { Counter } from './Counter';
-import { Message } from '../types';
+import { Message, FooterProps, ChatResponse } from '../types';
+import { secureGet, secureSet } from '../utils/secureStorage';
+import { useCSRF } from '../utils/csrf';
+import { apiPost } from '../utils/apiClient';
 
-export const Footer: React.FC = () => {
+export const Footer: React.FC<FooterProps> = ({ className }) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -26,29 +29,32 @@ export const Footer: React.FC = () => {
   const [getInTouchCount, setGetInTouchCount] = useState(0);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
+  // Initialize CSRF protection
+  const { token: csrfToken } = useCSRF();
+
   useEffect(() => {
-    // Visitor Count
+    // Visitor Count - using secure storage
     const countKey = 'portfolioVisitorCount';
-    let count = localStorage.getItem(countKey);
+    let count = secureGet<string>(countKey);
     if (count === null) count = '20';
     let numericCount = Number(count);
     const visitedKey = 'hasVisitedPortfolio';
-    if (!localStorage.getItem(visitedKey)) {
+    if (!secureGet<string>(visitedKey)) {
       numericCount += 1;
-      localStorage.setItem(visitedKey, 'true');
+      secureSet(visitedKey, 'true', 24 * 60 * 60 * 1000); // 24 hours expiration
     }
-    localStorage.setItem(countKey, numericCount.toString());
+    secureSet(countKey, numericCount.toString(), 24 * 60 * 60 * 1000); // 24 hours expiration
     setVisitorCount(numericCount);
 
-    // Meeting Count
+    // Meeting Count - using secure storage
     const meetingKey = 'portfolioMeetingCount';
-    let meeting = localStorage.getItem(meetingKey);
+    let meeting = secureGet<string>(meetingKey);
     if (meeting === null) meeting = '5';
     setMeetingCount(Number(meeting));
 
-    // Get In Touch Count
+    // Get In Touch Count - using secure storage
     const getInTouchKey = 'portfolioGetInTouchCount';
-    let getInTouch = localStorage.getItem(getInTouchKey);
+    let getInTouch = secureGet<string>(getInTouchKey);
     if (getInTouch === null) getInTouch = '10';
     setGetInTouchCount(Number(getInTouch));
   }, []);
@@ -73,8 +79,8 @@ export const Footer: React.FC = () => {
     setSelectedLanguage(language);
     setShowLanguageButtons(false);
     
-    const languageMessage = { sender: "user", text: language };
-    const aiResponse = { 
+    const languageMessage: Message = { sender: "user", text: language };
+    const aiResponse: Message = { 
       sender: "sam", 
       text: `Great! I'll chat with you in ${language}. How can I help you today?` 
     };
@@ -93,7 +99,7 @@ export const Footer: React.FC = () => {
   const handleSend = async () => {
     if (chatInput.trim() === "" || !selectedLanguage) return;
 
-    const userMessage = { sender: "user", text: chatInput };
+    const userMessage: Message = { sender: "user", text: chatInput };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setChatInput("");
@@ -106,35 +112,22 @@ export const Footer: React.FC = () => {
         content: msg.text
       }));
       
-      // Use environment variable for backend URL, fallback to relative path for development
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
-      const apiUrl = backendUrl ? `${backendUrl}/api/chat` : '/api/chat';
-      
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          messages: formattedMessages,
-          sessionId: `user-${Date.now()}`, // Simple session ID
-          context: {
-            systemMessage: `You are Sam AI, Sameer's friendly portfolio assistant. The user has selected to chat in ${selectedLanguage}. Please respond in ${selectedLanguage}. Keep responses concise and helpful. For greetings, respond briefly. For questions about Sameer, provide relevant info about his skills, projects, and experience.`,
-            maxHistoryLength: 10,
-            language: selectedLanguage
-          }
-        }),
+      // Use secure API client with CSRF protection
+      const response = await apiPost('/api/chat', { 
+        messages: formattedMessages,
+        sessionId: `user-${Date.now()}`, // Simple session ID
+        context: {
+          systemMessage: `You are Sam AI, Sameer's friendly portfolio assistant. The user has selected to chat in ${selectedLanguage}. Please respond in ${selectedLanguage}. Keep responses concise and helpful. For greetings, respond briefly. For questions about Sameer, provide relevant info about his skills, projects, and experience.`,
+          maxHistoryLength: 10,
+          language: selectedLanguage
+        }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to get response from AI');
-      }
-
-      const data = await response.json();
+      const data = response.data as ChatResponse;
       
       // Handle abuse responses
       if (data.updatedContext?.abuseDetected) {
-        const abuseMessage = { 
+        const abuseMessage: Message = { 
           sender: "sam", 
           text: data.response,
           isAbuse: true,
@@ -145,7 +138,7 @@ export const Footer: React.FC = () => {
       // Handle fallback responses
       else if (data.isFallback) {
         // Add a subtle indicator that we're using fallback mode
-        const fallbackIndicator = { 
+        const fallbackIndicator: Message = { 
           sender: "sam", 
           text: data.response,
           isFallback: true,
@@ -159,7 +152,7 @@ export const Footer: React.FC = () => {
         }
       } else {
         // Normal AI response
-        const aiMessage = { sender: "sam", text: data.response };
+        const aiMessage: Message = { sender: "sam", text: data.response };
         setMessages((msgs) => [...msgs, aiMessage]);
       }
 
@@ -172,7 +165,7 @@ export const Footer: React.FC = () => {
       
       // Use fallback response even for network errors
       const fallbackResponse = "I'm currently experiencing technical difficulties, but I can still help you learn about Sameer! He's a skilled software developer with expertise in React, Node.js, TypeScript, and cloud technologies. Feel free to ask about his skills, projects, or experience!";
-      const errorMessage = { 
+      const errorMessage: Message = { 
         sender: "sam", 
         text: fallbackResponse,
         isFallback: true,

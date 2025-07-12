@@ -214,7 +214,11 @@ export const Portfolio: React.FC = () => {
                     <img
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                      className={`w-full group-hover:scale-110 transition-transform duration-500 ${
+                        project.id === '11' 
+                          ? 'h-56 object-contain bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20' 
+                          : 'h-48 object-cover'
+                      }`}
                     />
                     {project.featured && (
                       <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-xs font-medium">

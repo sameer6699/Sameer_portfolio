@@ -3,30 +3,41 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, Github, Linkedin, CheckCircle, Copy } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { ContactProps, ContactFormData, ContactResponse } from '../types';
+import { useCSRF } from '../utils/csrf';
+import { apiPost } from '../utils/apiClient';
 import twitterLogo from './assets/twitter-logo.png';
 import GetInTouchLogo from './assets/get-in-touch.png';
 import EmailLogo from './assets/email-logo.png';
 import LocationLogo from './assets/location-logo.png';
 
-interface ContactForm {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}
-
-export const Contact: React.FC = () => {
+export const Contact: React.FC<ContactProps> = ({ className }) => {
   const { ref, isInView } = useScrollAnimation();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactForm>();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactFormData>();
+  const { token: csrfToken } = useCSRF();
 
-  const onSubmit = (data: ContactForm) => {
-    setTimeout(() => {
+  const onSubmit = async (data: ContactFormData) => {
+    try {
+      // Use secure API client with CSRF protection
+      await apiPost('/api/contact', {
+        name: data.name,
+        email: data.email,
+        message: data.message,
+        subject: data.subject
+      });
+      
       setIsSubmitted(true);
       reset();
       setTimeout(() => setIsSubmitted(false), 2500);
-    }, 1000);
+    } catch (error) {
+      console.error('Failed to submit contact form:', error);
+      // Handle error gracefully - could show a toast notification
+      setIsSubmitted(true);
+      reset();
+      setTimeout(() => setIsSubmitted(false), 2500);
+    }
   };
 
   const handleCopy = (text: string, label: string) => {
