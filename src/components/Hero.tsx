@@ -2,7 +2,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { ChevronDown, Calendar } from 'lucide-react';
 import { AnimatedText } from './AnimatedText';
 import profileImage from './assets/image (2).png';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState} from 'react';
 
 interface SymbolBase {
   top: number;
