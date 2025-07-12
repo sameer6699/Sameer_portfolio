@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { Code, Palette, Heart, Smartphone, BrainCircuit } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import aboutImage from './assets/image (2).png';
 import metaAvtarProfile from './assets/meta-Avtar-profile.png';
-import reactLogo from './assets/react-logo.png';
 import { AnimatedText } from './AnimatedText';
 
 export const About: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
-  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const [showAIAvatar, setShowAIAvatar] = React.useState(true);
 
   const techStack = [
@@ -19,7 +16,7 @@ export const About: React.FC = () => {
     { icon: '📦', name: 'Pandas' },
     { icon: '🤖', name: 'Machine Learning' },
     { icon: '🌐', name: 'Web Scraping' },
-    { icon: '🦾', name: 'AI/ML' },
+    { icon: '🦾', name: 'Artificial Intelligence' },
     { icon: '📊', name: 'Data Analysis' },
     { icon: '⚡', name: 'JavaScript' },
     { icon: '🔷', name: 'TypeScript' },
@@ -48,7 +45,7 @@ export const About: React.FC = () => {
       <div className="carousel-track">
         {techStack.map((tech, idx) => (
           <div
-            key={idx}
+            key={`tech-${idx}`}
             className="flex flex-col items-center justify-center min-w-[200px] h-24 bg-gray-50 dark:bg-[#181c2a] rounded-xl border border-gray-200 dark:border-[#23263a] text-gray-800 dark:text-white text-lg font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
             <span className="text-3xl mb-2">{tech.icon}</span>
@@ -58,7 +55,7 @@ export const About: React.FC = () => {
         {/* Duplicate for infinite effect */}
         {techStack.map((tech, idx) => (
           <div
-            key={tech.name + '-dup'}
+            key={`tech-dup-${idx}`}
             className="flex flex-col items-center justify-center min-w-[200px] h-24 bg-gray-50 dark:bg-[#181c2a] rounded-xl border border-gray-200 dark:border-[#23263a] text-gray-800 dark:text-white text-lg font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
             <span className="text-3xl mb-2">{tech.icon}</span>
