@@ -12,3 +12,16 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+@keyframes tech-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.carousel-track {
+  display: flex;
+  gap: 1.5rem;
+  animation: tech-marquee 40s linear infinite;
+  will-change: transform;
+  width: max-content;
+}

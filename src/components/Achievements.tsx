@@ -48,7 +48,7 @@ export const Achievements: React.FC = () => {
   const displayAchievements = showOther ? otherAchievements : achievements;
 
   return (
-    <section id="achievements" className="py-20 bg-white/50 dark:bg-gray-900/50">
+    <section id="achievements" className="py-20">
       <div className="container mx-auto px-6">
         <motion.div
           ref={ref}

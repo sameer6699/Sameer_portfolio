@@ -200,7 +200,7 @@ export const Experience: React.FC = () => {
   );
 
   return (
-    <section id="experience" className="py-20 bg-gray-50/50 dark:bg-gray-800/50">
+    <section id="experience" className="py-20">
       <div className="container mx-auto px-6">
         <motion.div
           ref={ref}

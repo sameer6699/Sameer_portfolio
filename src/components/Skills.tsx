@@ -82,7 +82,7 @@ export const Skills: React.FC = () => {
   };
 
   return (
-    <section id="skills" className="py-20 bg-gradient-to-br from-gray-50/80 to-white/60 dark:from-gray-900/80 dark:to-gray-800/60">
+    <section id="skills" className="py-20">
       <div className="container mx-auto px-6">
         <motion.div
           ref={ref}
@@ -100,29 +100,6 @@ export const Skills: React.FC = () => {
               const avgProficiency =
                 categorySkills.reduce((sum, skill) => sum + skill.level, 0) /
                 (categorySkills.length || 1);
-              // Animated count-up for percentage
-              const percentMotion = useMotionValue(0);
-              useEffect(() => {
-                if (hoveredSkill === key) {
-                  percentMotion.set(0);
-                  const end = Math.round(avgProficiency);
-                  const duration = 800;
-                  const startTime = performance.now();
-                  function animate(now: number) {
-                    const elapsed = now - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    percentMotion.set(Math.floor(progress * end));
-                    if (progress < 1 && hoveredSkill === key) {
-                      requestAnimationFrame(animate);
-                    } else {
-                      percentMotion.set(end);
-                    }
-                  }
-                  requestAnimationFrame(animate);
-                } else {
-                  percentMotion.set(0);
-                }
-              }, [hoveredSkill, key, avgProficiency, percentMotion]);
               return (
                 <motion.div
                   key={key}

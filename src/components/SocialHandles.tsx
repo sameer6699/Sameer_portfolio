@@ -68,7 +68,7 @@ export const SocialHandles: React.FC = () => {
   };
 
   return (
-    <section id="social-handles" className="bg-white/50 dark:bg-gray-900/50 min-h-screen flex items-center justify-center">
+    <section id="social-handles" className="min-h-screen flex items-center justify-center">
       <div className="container mx-auto px-6">
         <div className="w-full flex flex-col items-center justify-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 text-gray-800 dark:text-white flex items-center justify-center gap-3">

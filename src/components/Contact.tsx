@@ -48,7 +48,7 @@ export const Contact: React.FC = () => {
   ];
 
   return (
-    <section id="contact" className="relative py-24 bg-gradient-to-br from-purple-100/60 via-white/80 to-pink-100/60 dark:from-gray-900/80 dark:via-gray-900/60 dark:to-gray-800/80 overflow-hidden">
+    <section id="contact" className="relative py-24 overflow-hidden">
       {/* Decorative background blob */}
       <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-gradient-to-br from-purple-400/30 to-pink-400/20 rounded-full blur-3xl z-0" aria-hidden="true" />
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-gradient-to-tr from-pink-400/20 to-purple-400/10 rounded-full blur-2xl z-0" aria-hidden="true" />
