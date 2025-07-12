@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import aboutImage from './assets/image (2).png';
 import metaAvtarProfile from './assets/meta-Avtar-profile.png';
+import langchainLogo from './assets/langchain-logo.png';
 import { AnimatedText } from './AnimatedText';
 
 export const About: React.FC = () => {
@@ -10,31 +11,154 @@ export const About: React.FC = () => {
   const [showAIAvatar, setShowAIAvatar] = React.useState(true);
 
   const techStack = [
-    { icon: '🔥', name: 'PyTorch' },
-    { icon: '🔗', name: 'LangChain' },
-    { icon: '🧠', name: 'NLP' },
-    { icon: '📦', name: 'Pandas' },
-    { icon: '🤖', name: 'Machine Learning' },
-    { icon: '🌐', name: 'Web Scraping' },
-    { icon: '🦾', name: 'Artificial Intelligence' },
-    { icon: '📊', name: 'Data Analysis' },
-    { icon: '⚡', name: 'JavaScript' },
-    { icon: '🔷', name: 'TypeScript' },
-    { icon: '🐍', name: 'Python' },
-    { icon: '☕', name: 'Java' },
-    { icon: '⚛️', name: 'React' },
-    { icon: '🟢', name: 'Node.js' },
-    { icon: '🐍', name: 'Django' },
-    { icon: '🔥', name: 'Flask' },
-    { icon: '🍃', name: 'MongoDB' },
-    { icon: '🐘', name: 'PostgreSQL' },
-    { icon: '🐬', name: 'MySQL' },
-    { icon: '☁️', name: 'AWS' },
-    { icon: '☁️', name: 'Google Cloud' },
-    { icon: '☁️', name: 'Azure' },
-    { icon: '🐳', name: 'Docker' },
-    { icon: '📝', name: 'Git' },
-    { icon: '🔧', name: 'Jenkins' },
+    { 
+      icon: <img width="240" height="240" 
+      src="https://img.icons8.com/fluency/240/pytorch.png" 
+      alt="pytorch" className="w-12 h-12 object-contain" />, 
+      name: 'PyTorch' 
+    },
+    { 
+      icon: <img src={langchainLogo} alt="langchain" className="w-12 h-12 object-contain" />, 
+      name: 'LangChain' 
+    },
+    { 
+      icon: <img width="96" height="96" 
+      src="https://img.icons8.com/pulsar-gradient/96/brain-3.png" 
+      alt="brain-3" className="w-12 h-12 object-contain" />, 
+      name: 'NLP' 
+    },
+    { 
+      icon: <img width="480" height="480" 
+      src="https://img.icons8.com/color/480/pandas.png" 
+      alt="pandas" className="w-12 h-12 object-contain" />, 
+      name: 'Pandas' 
+    },
+    { 
+      icon: <img width="96" height="96" 
+      src="https://img.icons8.com/pulsar-gradient/96/artificial-intelligence.png" 
+      alt="artificial-intelligence" className="w-12 h-12 object-contain" />, 
+      name: 'Machine Learning' 
+    },
+    { 
+      icon: <img width="480" height="480" 
+      src="https://img.icons8.com/color/480/web-scraper.png" 
+      alt="web-scraper" className="w-12 h-12 object-contain" />, 
+      name: 'Web Scraping' 
+    },
+    { 
+      icon: <img width="96" height="96" 
+      src="https://img.icons8.com/pulsar-gradient/96/artificial-intelligence.png" 
+      alt="artificial-intelligence" className="w-12 h-12 object-contain" />, 
+      name: 'Artificial Intelligence' 
+    },
+    { 
+      icon: <img width="60" height="60" 
+      src="https://img.icons8.com/papercut/60/financial-growth-analysis.png" 
+      alt="financial-growth-analysis" className="w-12 h-12 object-contain" />, 
+      name: 'Data Analysis' 
+    },
+    { 
+      icon: <img width="480" height="480" 
+      src="https://img.icons8.com/color/480/javascript--v1.png" 
+      alt="javascript--v1" className="w-12 h-12 object-contain" />, 
+      name: 'JavaScript' 
+    },
+    { 
+      icon: <img width="240" height="240" 
+      src="https://img.icons8.com/fluency/240/typescript--v1.png" 
+      alt="typescript--v1" className="w-12 h-12 object-contain" />, 
+      name: 'TypeScript' 
+    },
+    { 
+      icon: <img width="480" height="480" 
+      src="https://img.icons8.com/color/480/python--v1.png" 
+      alt="python--v1" className="w-12 h-12 object-contain" />, 
+      name: 'Python' 
+    },
+    { 
+      icon: <img width="480" height="480" 
+      src="https://img.icons8.com/color/480/java-coffee-cup-logo--v1.png" 
+      alt="java-coffee-cup-logo--v1" className="w-12 h-12 object-contain" />, 
+      name: 'Java' 
+    },
+    { 
+      icon: <img width="100" height="100" 
+      src="https://img.icons8.com/plasticine/100/react.png" 
+      alt="react" className="w-12 h-12 object-contain" />, 
+      name: 'React' 
+    },
+    { 
+      icon: <img width="240" height="240" 
+      src="https://img.icons8.com/fluency/240/node-js.png" 
+      alt="node-js" className="w-12 h-12 object-contain" />, 
+      name: 'Node.js' 
+    },
+    { 
+      icon: <img width="480" height="480" 
+      src="https://img.icons8.com/color/480/django.png" 
+      alt="django" className="w-12 h-12 object-contain" />, 
+      name: 'Django' 
+    },
+    { 
+      icon: <img width="480" height="480" 
+      src="https://img.icons8.com/color/480/flask.png" 
+      alt="flask" className="w-12 h-12 object-contain" />, 
+      name: 'Flask' 
+    },
+    { 
+      icon: <img width="480" height="480" 
+      src="https://img.icons8.com/color/480/mongodb.png" 
+      alt="mongodb" className="w-12 h-12 object-contain" />, 
+      name: 'MongoDB' 
+    },
+    { 
+      icon: <img width="480" height="480" 
+      src="https://img.icons8.com/color/480/postgreesql.png" 
+      alt="postgreesql" className="w-12 h-12 object-contain" />, 
+      name: 'PostgreSQL' 
+    },
+    { 
+      icon: <img width="96" height="96" 
+      src="https://img.icons8.com/fluency/96/sql.png" 
+      alt="sql" className="w-12 h-12 object-contain" />, 
+      name: 'MySQL' 
+    },
+    { 
+      icon: <img width="480" height="480" 
+      src="https://img.icons8.com/color/480/amazon-web-services.png" 
+      alt="amazon-web-services" className="w-12 h-12 object-contain" />, 
+      name: 'AWS' 
+    },
+    { 
+      icon: <img width="240" height="240" 
+      src="https://img.icons8.com/fluency/240/google-cloud.png" 
+      alt="google-cloud" className="w-12 h-12 object-contain" />, 
+      name: 'Google Cloud' 
+    },
+    { 
+      icon: <img width="240" height="240" 
+      src="https://img.icons8.com/fluency/240/azure-1.png" 
+      alt="azure-1" className="w-12 h-12 object-contain" />, 
+      name: 'Azure' 
+    },
+    { 
+      icon: <img width="240" height="240" 
+      src="https://img.icons8.com/fluency/240/docker.png" 
+      alt="docker" className="w-12 h-12 object-contain" />, 
+      name: 'Docker' 
+    },
+    { 
+      icon: <img width="480" height="480" 
+      src="https://img.icons8.com/color/480/git.png" 
+      alt="git" className="w-12 h-12 object-contain" />, 
+      name: 'Git' 
+    },
+    { 
+      icon: <img width="480" height="480" 
+      src="https://img.icons8.com/color/480/jenkins.png" 
+      alt="jenkins" className="w-12 h-12 object-contain" />, 
+      name: 'Jenkins' 
+    },
   ];
 
   const TechStackCarousel = () => (
@@ -48,7 +172,9 @@ export const About: React.FC = () => {
             key={`tech-${idx}`}
             className="flex flex-col items-center justify-center min-w-[200px] h-24 bg-gray-50 dark:bg-[#181c2a] rounded-xl border border-gray-200 dark:border-[#23263a] text-gray-800 dark:text-white text-lg font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
-            <span className="text-3xl mb-2">{tech.icon}</span>
+            <span className="text-3xl mb-2 flex items-center justify-center">
+              {typeof tech.icon === 'string' ? tech.icon : tech.icon}
+            </span>
             {tech.name}
           </div>
         ))}
@@ -58,7 +184,9 @@ export const About: React.FC = () => {
             key={`tech-dup-${idx}`}
             className="flex flex-col items-center justify-center min-w-[200px] h-24 bg-gray-50 dark:bg-[#181c2a] rounded-xl border border-gray-200 dark:border-[#23263a] text-gray-800 dark:text-white text-lg font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
-            <span className="text-3xl mb-2">{tech.icon}</span>
+            <span className="text-3xl mb-2 flex items-center justify-center">
+              {typeof tech.icon === 'string' ? tech.icon : tech.icon}
+            </span>
             {tech.name}
           </div>
         ))}
