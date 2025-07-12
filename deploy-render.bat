@@ -1,120 +1,71 @@
 @echo off
-REM Render Deployment Script for Sameer Portfolio (Windows)
-REM This script helps prepare and deploy the project to Render
-
-echo 🚀 Starting Render Deployment Process...
-
-REM Check if git is installed
-git --version >nul 2>&1
-if errorlevel 1 (
-    echo [ERROR] Git is not installed. Please install Git first.
-    exit /b 1
-)
-
-REM Check if we're in a git repository
-git rev-parse --git-dir >nul 2>&1
-if errorlevel 1 (
-    echo [ERROR] Not in a git repository. Please initialize git and add your files.
-    exit /b 1
-)
-
-echo [INFO] Checking current git status...
-
-REM Check for uncommitted changes
-git diff-index --quiet HEAD --
-if errorlevel 1 (
-    echo [WARNING] You have uncommitted changes. Please commit them before deploying.
-    echo Run these commands:
-    echo   git add .
-    echo   git commit -m "Prepare for Render deployment"
-    echo   git push origin main
-    exit /b 1
-)
-
-echo [INFO] Checking if remote repository is set up...
-
-REM Check if remote origin exists
-git remote get-url origin >nul 2>&1
-if errorlevel 1 (
-    echo [ERROR] No remote origin found. Please add your GitHub repository as origin.
-    echo Run: git remote add origin ^<your-github-repo-url^>
-    exit /b 1
-)
-
-echo [INFO] Checking if render.yaml exists...
+echo 🚀 Starting One-Shot Deployment to Render
+echo ==========================================
 
 REM Check if render.yaml exists
 if not exist "render.yaml" (
-    echo [ERROR] render.yaml not found. Please ensure it exists in the root directory.
+    echo ❌ Error: render.yaml not found!
+    echo Please make sure you're in the project root directory.
+    pause
     exit /b 1
 )
 
-echo [INFO] Checking backend dependencies...
+echo ✅ render.yaml found
 
-REM Check if backend package.json exists
-if not exist "backend\package.json" (
-    echo [ERROR] backend\package.json not found.
+REM Check if backend directory exists
+if not exist "backend" (
+    echo ❌ Error: backend directory not found!
+    pause
     exit /b 1
 )
 
-echo [INFO] Checking frontend dependencies...
+echo ✅ Backend directory found
 
-REM Check if frontend package.json exists
+REM Check if package.json exists in root (frontend)
 if not exist "package.json" (
-    echo [ERROR] package.json not found in root directory.
+    echo ❌ Error: package.json not found in root directory!
+    pause
     exit /b 1
 )
 
-echo [SUCCESS] All pre-deployment checks passed!
+echo ✅ Frontend package.json found
 
 echo.
-echo [INFO] Next steps for Render deployment:
+echo 📋 Deployment Checklist:
+echo ========================
+echo 1. ✅ render.yaml configured
+echo 2. ✅ Backend and frontend code ready
+echo 3. ⏳ Ready to deploy to Render
 echo.
-echo 1. 📝 Set up MongoDB Atlas:
-echo    - Go to https://mongodb.com/atlas
-echo    - Create a free cluster
-echo    - Set up database user and network access
-echo    - Get your connection string
+echo 🔧 Next Steps:
+echo ==============
+echo 1. Push your code to GitHub:
+echo    git add .
+echo    git commit -m "Ready for Render deployment"
+echo    git push origin main
 echo.
-echo 2. 🤖 Set up Google AI Studio (Gemini):
-echo    - Go to https://aistudio.google.com
-echo    - Create an API key
-echo.
-echo 3. 🌐 Deploy on Render:
-echo    - Go to https://render.com
-echo    - Sign up/Login
+echo 2. Go to https://render.com and:
+echo    - Create a new account or sign in
 echo    - Click "New +" → "Blueprint"
 echo    - Connect your GitHub repository
-echo    - Render will auto-detect render.yaml
+echo    - Render will automatically detect render.yaml
+echo    - Click "Apply" to deploy both services
 echo.
-echo 4. ⚙️ Configure Environment Variables in Render:
-echo    Backend Service:
-echo    - GEMINI_API_KEY: Your Gemini API key
+echo 3. Configure Environment Variables in Render Dashboard:
+echo    For Backend Service:
+echo    - GEMINI_API_KEY: Your Google Gemini API key
 echo    - MONGO_URI: Your MongoDB Atlas connection string
 echo.
-echo 5. 🔗 Update Frontend Backend URL:
-echo    - After backend deploys, update VITE_BACKEND_URL in frontend service
-echo    - Set it to your backend URL (e.g., https://sameer-portfolio-backend.onrender.com)
+echo 4. Wait for deployment to complete (5-10 minutes)
 echo.
-echo 6. 🧪 Test Your Deployment:
-echo    - Test backend health: https://your-backend-url.onrender.com/api/chat/health/full
-echo    - Test frontend: https://your-frontend-url.onrender.com
-echo    - Test chat functionality
+echo 🎯 Your services will be available at:
+echo    Frontend: https://sameer-portfolio-frontend.onrender.com
+echo    Backend:  https://sameer-portfolio-backend.onrender.com
+echo.
+echo 🔍 Monitor deployment:
+echo    - Check Render dashboard for build logs
+echo    - Test health endpoint: https://sameer-portfolio-backend.onrender.com/api/chat/health
 echo.
 
-echo [INFO] Current git status:
-git status --porcelain
-
-echo [INFO] Current branch:
-git branch --show-current
-
-echo [INFO] Remote origin:
-git remote get-url origin
-
-echo.
-echo [SUCCESS] Deployment script completed successfully!
-echo [INFO] Follow the steps above to complete your Render deployment.
-echo.
-echo [WARNING] Remember to never commit API keys or sensitive data to git!
-
+echo 🚀 Ready to deploy! Follow the steps above.
 pause 
