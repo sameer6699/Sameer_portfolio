@@ -14,8 +14,7 @@ import adobeXDLogo from './assets/AdobeXD-logo.png';
 import dockerLogo from './assets/docker-logo.png';
 import awsLogo from './assets/AWS-logo.png';
 import gitLogo from './assets/git-logo.png';
-import { useState, useEffect} from 'react';
-import { useMotionValue } from 'framer-motion';
+import { useState} from 'react';
 
 const skillIcons: Record<string, string> = {
   'React.js': reactLogo,
@@ -35,29 +34,6 @@ const skillIcons: Record<string, string> = {
 export const Skills: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
-  const [visitorCount, setVisitorCount] = useState<number>(0);
-
-  useEffect(() => {
-    const countKey = 'portfolioVisitorCount';
-    let count = localStorage.getItem(countKey);
-
-    // Initialize count to 20 if it's not set
-    if (count === null) {
-      count = '20';
-    }
-
-    let numericCount = Number(count);
-    const visitedKey = 'hasVisitedPortfolio';
-
-    // If the user hasn't visited before, increment the count
-    if (!localStorage.getItem(visitedKey)) {
-      numericCount += 1;
-      localStorage.setItem(visitedKey, 'true');
-    }
-    
-    localStorage.setItem(countKey, numericCount.toString());
-    setVisitorCount(numericCount);
-  }, []);
 
   const skills: Skill[] = [
     { name: 'React.js', level: 95, category: 'frontend' },
@@ -95,11 +71,8 @@ export const Skills: React.FC = () => {
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {Object.entries(categories).map(([key, category], categoryIndex) => {
-              // Calculate average proficiency for this category
+              // Get skills for this category
               const categorySkills = skills.filter(skill => skill.category === key);
-              const avgProficiency =
-                categorySkills.reduce((sum, skill) => sum + skill.level, 0) /
-                (categorySkills.length || 1);
               return (
                 <motion.div
                   key={key}

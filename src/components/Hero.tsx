@@ -75,29 +75,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
     'YAGNI', 'MVP', 'POC', 'SPA', 'MPA', 'SSR', 'SSG', 'ISR', 'CSR', 'JAMstack', 'MERN', 'MEAN', 'PERN', 'T3', 'Full', 'Stack', 'Frontend', 'Backend'
   ];
   const [cursor, setCursor] = useState<{ x: number | null; y: number | null } | null>(null);
-  const [shiftActivated, setShiftActivated] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
-
-  // Listen for Shift key press
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Shift') {
-        setShiftActivated(true);
-      }
-    };
-    const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.key === 'Shift') {
-        setShiftActivated(false);
-        setCursor({ x: null, y: null });
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
 
   // Store random base positions for each symbol so they don't change on every render
   const symbolBases = useRef<SymbolBase[]>(
