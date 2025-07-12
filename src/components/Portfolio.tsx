@@ -8,7 +8,7 @@ import ComputerLogo from './assets/computer-logo.png';
 
 export const Portfolio: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
-  const [activeCategory, setActiveCategory] = useState<'freelancing' | 'academic' | 'openSource' | 'all'>('freelancing');
+  const [activeCategory, setActiveCategory] = useState<'freelancing' | 'academic' | 'openSource'>('freelancing');
   const projectRowRef = useRef<HTMLDivElement>(null);
 
   const projects: Project[] = [
@@ -102,9 +102,7 @@ export const Portfolio: React.FC = () => {
     },
   ];
 
-  const filteredProjects = activeCategory === 'all'
-    ? projects
-    : projects.filter(project => project.category === activeCategory);
+  const filteredProjects = projects.filter(project => project.category === activeCategory);
 
   const scrollProjects = (direction: 'left' | 'right') => {
     if (projectRowRef.current) {
@@ -118,7 +116,7 @@ export const Portfolio: React.FC = () => {
   };
 
   useEffect(() => {
-    if (activeCategory !== 'all' && projectRowRef.current) {
+    if (projectRowRef.current) {
       // Center the first card in the row
       const row = projectRowRef.current;
       const firstCard = row.querySelector('div[data-project-card]');
@@ -174,16 +172,7 @@ export const Portfolio: React.FC = () => {
             >
               Open Source Contribution
             </button>
-            <button
-              onClick={() => setActiveCategory('all')}
-              className={`px-4 py-2 sm:px-6 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 flex items-center gap-2 whitespace-nowrap ${
-                activeCategory === 'all'
-                  ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow-lg shadow-yellow-500/25'
-                  : 'bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-800/30'
-              }`}
-            >
-              All Projects
-            </button>
+
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white flex items-center justify-center gap-3">
             My Portfolio

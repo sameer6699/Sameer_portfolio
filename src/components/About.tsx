@@ -41,7 +41,7 @@ export const About: React.FC = () => {
   ];
 
   const TechStackCarousel = () => (
-    <div className="w-screen relative left-1/2 right-1/2 ml-[-50vw] mr-[-50vw] bg-white dark:bg-[#101522] py-4 overflow-hidden">
+    <div className="w-screen relative left-1/2 right-1/2 ml-[-50vw] mr-[-50vw] py-4 overflow-hidden">
       <h3 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
         Known Technologies & Tech Stack
       </h3>
