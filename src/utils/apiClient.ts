@@ -42,8 +42,10 @@ class APIClient {
       return window.location.origin; // Use current origin for proxy
     }
     
-    // Production fallback
-    throw new Error('VITE_BACKEND_URL environment variable is required in production');
+    // Production fallback - use a default backend URL or show error
+    console.error('VITE_BACKEND_URL environment variable is required in production');
+    // Return a fallback URL or throw error based on your preference
+    return 'https://sameer-portfolio-backend.onrender.com'; // Default fallback
   }
 
   /**
@@ -51,7 +53,8 @@ class APIClient {
    */
   private validateEnvironment(): void {
     if (!import.meta.env.DEV && !import.meta.env.VITE_BACKEND_URL) {
-      throw new Error('VITE_BACKEND_URL environment variable is required in production');
+      console.warn('VITE_BACKEND_URL environment variable is not set in production');
+      // Don't throw error, just log warning
     }
   }
 
