@@ -1,5 +1,9 @@
 # 🚀 Sameer's Modern Portfolio Website
 
+<p align="center">
+  <img src="public/Information-picture.png" alt="Information" width="400" />
+</p>
+
 A cutting-edge, full-stack portfolio website featuring an intelligent AI chat assistant, modern animations, and responsive design. Built with React, TypeScript, and powered by local AI models.
 
 <div align="center">
