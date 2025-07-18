@@ -5,11 +5,78 @@ import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { Project } from '../types';
 import GSOC2024Img from './assets/GSOC-2024.png';
 import ComputerLogo from './assets/computer-logo.png';
+import EcommerceLogo from './assets/ecommerce-logo.png';
+
+// Add Alokai modal content as a constant
+const alokaiDetails = (
+  <div className="p-0 sm:p-0 max-w-lg mx-auto">
+    {/* Fixed Header with background */}
+    <div className="sticky top-0 z-20 rounded-t-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4 flex items-center gap-3" style={{ minHeight: '64px' }}>
+      {/* Removed Alokai logo icon */}
+      <div>
+        <h2 className="text-2xl font-bold text-white mb-0">Alokai</h2>
+        <p className="text-white text-sm">Composable Commerce Frontend Ecosystem</p>
+      </div>
+    </div>
+    {/* Hero image with Ecommerce Logo overlay, consistent style */}
+    <div className="relative w-full h-40 bg-gray-100 dark:bg-gray-800 rounded-b-lg overflow-hidden flex items-center justify-center">
+      <img
+        src="https://www.alokai.com/_next/image?url=%2Fimages%2Fhero.png&w=384&q=75"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover rounded-b-lg"
+        style={{ zIndex: 1 }}
+      />
+      <div className="relative z-10 flex items-center justify-center w-full h-full">
+        <img
+          src={EcommerceLogo}
+          alt="Ecommerce Platform Logo"
+          className="max-h-20 max-w-xs object-contain rounded shadow-lg bg-white/90 p-2 border border-gray-200"
+        />
+      </div>
+    </div>
+    <div className="px-6 py-4">
+      <p className="mb-2 text-gray-700 dark:text-gray-200 font-medium">An ecosystem of developer tools that accelerate and simplify building eCommerce Storefronts.<br/>Fully customizable, backend-agnostic with 3500+ Live Stores!</p>
+      <a href="https://www.alokai.com" target="_blank" rel="noopener noreferrer" className="inline-block bg-purple-600 hover:bg-pink-600 text-white font-semibold px-4 py-2 rounded transition mb-4">Documentation</a>
+      <hr className="my-4 border-purple-200 dark:border-purple-700" />
+      <p className="mb-2 text-gray-600 dark:text-gray-300">Alokai is your guide to the composable commerce world that simplifies building, deploying, and monitoring ecommerce frontends.</p>
+      <ul className="list-disc pl-5 mb-2 text-gray-700 dark:text-gray-200">
+        <li>Works with any backend (API compatible, many integrations available)</li>
+        <li>Fully-working eCommerce storefront integrated with your favourite stack</li>
+        <li>Build with Storefront UI or your own theme</li>
+      </ul>
+      <hr className="my-4 border-purple-200 dark:border-purple-700" />
+      <h3 className="font-semibold mt-4 mb-1 text-purple-700 dark:text-purple-300">What you get out-of-the-box 📦</h3>
+      <ul className="list-disc pl-5 mb-2 text-gray-700 dark:text-gray-200">
+        <li>Nuxt.js, Next.js, Alokai Theme, Storefront UI, Alokai Middleware</li>
+      </ul>
+      <h3 className="font-semibold mt-4 mb-1 text-purple-700 dark:text-purple-300">Our Tech Stack 🛠</h3>
+      <div className="flex flex-wrap gap-2 mb-2">
+        {['Vue.js','Nuxt.js','React.js','Next.js','TypeScript','Storefront UI','Express.js','GraphQL','Yarn','Docker','Jest'].map(tech => (
+          <span key={tech} className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-2 py-1 rounded text-xs font-medium">{tech}</span>
+        ))}
+      </div>
+      <hr className="my-4 border-purple-200 dark:border-purple-700" />
+      <h3 className="font-semibold mt-4 mb-1 text-purple-700 dark:text-purple-300">Contribution 🤝</h3>
+      <p className="mb-2 text-gray-600 dark:text-gray-300">Alokai is Open Source! Read our Contributing Guide and Code of Conduct. Join our Discord for help or to contribute.</p>
+      <p className="mb-2 text-gray-600 dark:text-gray-300">Found a bug or have a feature suggestion? Create an issue on GitHub.</p>
+      <hr className="my-4 border-purple-200 dark:border-purple-700" />
+      <h3 className="font-semibold mt-4 mb-1 text-purple-700 dark:text-purple-300">Follow us on Social Media</h3>
+      <div className="flex gap-3 mt-2">
+        <a href="https://twitter.com/alokai_com" target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-500">Twitter</a>
+        <a href="https://youtube.com/@alokai" target="_blank" rel="noopener noreferrer" className="hover:underline text-red-500">YouTube</a>
+        <a href="https://dev.to/alokai" target="_blank" rel="noopener noreferrer" className="hover:underline text-gray-700 dark:text-gray-200">Dev.to</a>
+        <a href="https://linkedin.com/company/alokai" target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-700">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+);
 
 export const Portfolio: React.FC = () => {
   const { ref, isInView } = useScrollAnimation();
   const [activeCategory, setActiveCategory] = useState<'freelancing' | 'academic' | 'openSource'>('freelancing');
   const projectRowRef = useRef<HTMLDivElement>(null);
+  const [isAlokaiModalOpen, setAlokaiModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   const projects: Project[] = [
     {
@@ -19,7 +86,7 @@ export const Portfolio: React.FC = () => {
       image: 'https://images.pexels.com/photos/34577/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=600',
       tags: ['React', 'Node.js', 'Stripe', 'MongoDB'],
       liveUrl: '#',
-      githubUrl: '#',
+      githubUrl: 'https://github.com/sameer6699/vue-storefront',
       featured: true,
       category: 'freelancing',
     },
@@ -96,7 +163,7 @@ export const Portfolio: React.FC = () => {
       image: GSOC2024Img,
       tags: ['GSOC', 'CVAT', 'Open Source', 'Python', 'Django', 'React', 'TypeScript', 'Cypress'],
       liveUrl: 'https://www.cvat.ai/',
-      githubUrl: 'https://github.com/opencv/cvat',
+      githubUrl: 'https://github.com/sameer6699/cvat-GSOC-2024',
       featured: true,
       category: 'openSource',
     },
@@ -130,6 +197,12 @@ export const Portfolio: React.FC = () => {
       }
     }
   }, [activeCategory]);
+
+  useEffect(() => {
+    // Simulate loading for 10 seconds
+    const timer = setTimeout(() => setLoading(false), 10000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <section id="portfolio" className="py-20">
@@ -172,7 +245,6 @@ export const Portfolio: React.FC = () => {
             >
               Open Source Contribution
             </button>
-
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white flex items-center justify-center gap-3">
             My Portfolio
@@ -183,116 +255,155 @@ export const Portfolio: React.FC = () => {
             mobile apps, and design.
           </p>
 
-          {/* Projects Grid with Horizontal Scroll and Nav Buttons */}
-          <div className="relative flex items-center">
-            <button
-              className="absolute left-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition disabled:opacity-30 hidden md:block"
-              style={{ top: '50%', transform: 'translateY(-50%)' }}
-              onClick={() => scrollProjects('left')}
-              aria-label="Scroll Left"
-              type="button"
-            >
-              <ChevronLeft className="w-6 h-6 text-purple-600" />
-            </button>
-            <motion.div
-              ref={projectRowRef}
-              className="flex gap-8 overflow-x-auto scroll-smooth py-2 px-1 hide-scrollbar w-full"
-              layout
-            >
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  data-project-card
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ y: -10 }}
-                  className="min-w-[320px] max-w-xs w-full group bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/20 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer relative"
+          {/* Loader */}
+          {loading ? (
+            <div className="w-full flex items-center justify-center py-16 relative" style={{ minHeight: '200px', background: '#fff8fc' }}>
+              <div className="loader"></div>
+            </div>
+          ) : (
+            <>
+              {/* Projects Grid with Horizontal Scroll and Nav Buttons */}
+              <div className="relative flex items-center">
+                <button
+                  className="absolute left-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition disabled:opacity-30 hidden md:block"
+                  style={{ top: '50%', transform: 'translateY(-50%)' }}
+                  onClick={() => scrollProjects('left')}
+                  aria-label="Scroll Left"
+                  type="button"
                 >
-                  <div className="relative overflow-hidden">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className={`w-full group-hover:scale-110 transition-transform duration-500 ${
-                        project.id === '11' 
-                          ? 'h-56 object-contain bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20' 
-                          : 'h-48 object-cover'
-                      }`}
-                    />
-                    {project.featured && (
-                      <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                        Featured
+                  <ChevronLeft className="w-6 h-6 text-purple-600" />
+                </button>
+                <motion.div
+                  ref={projectRowRef}
+                  className="flex gap-8 overflow-x-auto scroll-smooth py-2 px-1 hide-scrollbar w-full"
+                  layout
+                >
+                  {filteredProjects.map((project, index) => (
+                    <motion.div
+                      key={project.id}
+                      data-project-card
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      whileHover={{ y: -10 }}
+                      className="min-w-[320px] max-w-xs w-full group bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/20 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer relative"
+                    >
+                      <div className="relative overflow-hidden">
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          className={`w-full group-hover:scale-110 transition-transform duration-500 ${
+                            project.id === '11' 
+                              ? 'h-56 object-contain bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20' 
+                              : 'h-48 object-cover'
+                          }`}
+                        />
+                        {project.featured && (
+                          <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                            Featured
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div className="p-6 pb-16">
-                    <h3 className="text-xl font-bold mb-3 text-gray-800 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                      {project.description.split('\n')[0]}
-                    </p>
-                    <div className="flex flex-wrap gap-4 pb-4 justify-center">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium"
+                      <div className="p-6 pb-16">
+                        <h3 className="text-xl font-bold mb-3 text-gray-800 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                          {project.title}
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                          {project.description.split('\n')[0]}
+                        </p>
+                        <div className="flex flex-wrap gap-4 pb-4 justify-center">
+                          {project.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      {/* Action Icons at bottom right */}
+                      <div className="absolute bottom-4 right-4 flex gap-2 z-10">
+                        {/* Live Demo button logic for Ecommerce project */}
+                        {project.id === '1' ? (
+                          <button
+                            className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-purple-700 dark:text-purple-300 hover:bg-white/30 transition-colors border border-purple-200 dark:border-purple-700 text-sm"
+                            title="Project Details"
+                            onClick={e => { e.stopPropagation(); setAlokaiModalOpen(true); }}
+                            type="button"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </button>
+                        ) : (
+                          <a
+                            href={project.liveUrl}
+                            className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-purple-700 dark:text-purple-300 hover:bg-white/30 transition-colors border border-purple-200 dark:border-purple-700 text-sm"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Live Demo"
+                            onClick={e => e.stopPropagation()}
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                        )}
+                        <a
+                          href={project.githubUrl}
+                          className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-purple-700 dark:text-purple-300 hover:bg-white/30 transition-colors border border-purple-200 dark:border-purple-700 text-sm"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="GitHub Repository"
+                          onClick={e => e.stopPropagation()}
                         >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  {/* Action Icons at bottom right */}
-                  <div className="absolute bottom-4 right-4 flex gap-2 z-10">
-                    <a
-                      href={project.liveUrl}
-                      className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-purple-700 dark:text-purple-300 hover:bg-white/30 transition-colors border border-purple-200 dark:border-purple-700 text-sm"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="Live Demo"
-                      onClick={e => e.stopPropagation()}
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                    <a
-                      href={project.githubUrl}
-                      className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-purple-700 dark:text-purple-300 hover:bg-white/30 transition-colors border border-purple-200 dark:border-purple-700 text-sm"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="GitHub Repository"
-                      onClick={e => e.stopPropagation()}
-                    >
-                      <Github className="w-4 h-4" />
-                    </a>
-                  </div>
+                          <Github className="w-4 h-4" />
+                        </a>
+                      </div>
+                    </motion.div>
+                  ))}
                 </motion.div>
-              ))}
-            </motion.div>
-            <button
-              className="absolute right-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition disabled:opacity-30 hidden md:block"
-              style={{ top: '50%', transform: 'translateY(-50%)' }}
-              onClick={() => scrollProjects('right')}
-              aria-label="Scroll Right"
-              type="button"
-            >
-              <ChevronRight className="w-6 h-6 text-purple-600" />
-            </button>
-          </div>
+                <button
+                  className="absolute right-0 z-20 bg-white/80 dark:bg-gray-900/80 rounded-full p-2 shadow-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition disabled:opacity-30 hidden md:block"
+                  style={{ top: '50%', transform: 'translateY(-50%)' }}
+                  onClick={() => scrollProjects('right')}
+                  aria-label="Scroll Right"
+                  type="button"
+                >
+                  <ChevronRight className="w-6 h-6 text-purple-600" />
+                </button>
+              </div>
 
-          {filteredProjects.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
-              <p className="text-gray-500 dark:text-gray-400">
-                No projects found for the selected filter.
-              </p>
-            </motion.div>
+              {filteredProjects.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-12"
+                >
+                  <p className="text-gray-500 dark:text-gray-400">
+                    No projects found for the selected filter.
+                  </p>
+                </motion.div>
+              )}
+            </>
           )}
         </motion.div>
+        {/* Modal for Alokai/Ecommerce project */}
+        {isAlokaiModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl max-w-lg w-full relative animate-fadeIn border-2 border-purple-400 dark:border-purple-700 p-0">
+              <button
+                className="absolute top-3 right-3 text-white bg-purple-600 hover:bg-pink-600 rounded-full w-8 h-8 flex items-center justify-center text-xl font-bold shadow-lg transition"
+                onClick={() => setAlokaiModalOpen(false)}
+                aria-label="Close"
+                style={{ zIndex: 30 }}
+              >
+                &times;
+              </button>
+              <div className="max-h-[80vh] overflow-y-auto">
+                {alokaiDetails}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
