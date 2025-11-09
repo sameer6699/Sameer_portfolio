@@ -118,3 +118,43 @@ html, body {
   box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75), -0.5em -1em rgba(233, 169, 32, 0.75);
  }
 }
+
+/* Tooltip styles for Hero section */
+.hero-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+.hero-tooltip .hero-tooltip-text {
+  visibility: hidden;
+  width: 180px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 100;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -90px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 1rem;
+  pointer-events: none;
+}
+.hero-tooltip:hover .hero-tooltip-text,
+.hero-tooltip:focus .hero-tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+.hero-tooltip .hero-tooltip-text::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}

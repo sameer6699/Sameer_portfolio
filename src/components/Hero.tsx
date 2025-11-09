@@ -2,7 +2,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { ChevronDown, Calendar } from 'lucide-react';
 import { AnimatedText } from './AnimatedText';
 import profileImage from './assets/image (2).png';
-import { useRef, useState} from 'react';
+import React, { useState, useRef } from 'react';
 
 interface SymbolBase {
   top: number;
@@ -76,6 +76,41 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
   ];
   const [cursor, setCursor] = useState<{ x: number | null; y: number | null } | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Tooltip messages in different Indian languages
+  const helloMessages = [
+    'नमस्ते (Hindi)',
+    'வணக்கம் (Tamil)',
+    'নমস্কার (Bengali)',
+    'નમસ્તે (Gujarati)',
+    'ਨਮਸਤੇ (Punjabi)',
+    'నమస్తే (Telugu)',
+    'ನಮಸ್ಕಾರ (Kannada)',
+    'നമസ്കാരം (Malayalam)',
+    'ନମସ୍କାର (Odia)',
+    'नमस्कार (Marathi)',
+    'હેલો (Gujarati)',
+    'Hello (English)'
+  ];
+  const [tooltipIndex, setTooltipIndex] = useState(0);
+  const [tooltipActive, setTooltipActive] = useState(false);
+  const tooltipIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleTooltipEnter = () => {
+    setTooltipActive(true);
+    tooltipIntervalRef.current = setInterval(() => {
+      setTooltipIndex((prev) => (prev + 1) % helloMessages.length);
+    }, 1000);
+  };
+
+  const handleTooltipLeave = () => {
+    setTooltipActive(false);
+    if (tooltipIntervalRef.current) {
+      clearInterval(tooltipIntervalRef.current);
+      tooltipIntervalRef.current = null;
+    }
+    setTooltipIndex(0);
+  };
 
   // Store random base positions for each symbol so they don't change on every render
   const symbolBases = useRef<SymbolBase[]>(
@@ -320,6 +355,19 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
         >
           I create beautiful, functional websites and applications that solve real-world problems.
           Let's build something amazing together.
+          <span
+            className="hero-tooltip ml-2 align-middle"
+            tabIndex={0}
+            onMouseEnter={handleTooltipEnter}
+            onMouseLeave={handleTooltipLeave}
+            onFocus={handleTooltipEnter}
+            onBlur={handleTooltipLeave}
+          >
+            <span className="underline decoration-dotted cursor-pointer text-purple-600 dark:text-pink-400">?</span>
+            <span className="hero-tooltip-text">
+              {helloMessages[tooltipIndex]}
+            </span>
+          </span>
         </motion.p>
 
         <motion.div
